@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="/css/bootstrap.min.css?v=3.3.5" rel="stylesheet">
+    <link href="/css/font-awesome.min.css?v=4.4.0" rel="stylesheet">
+    <link href="/css/animate.min.css" rel="stylesheet">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+    <link href="/css/style.min.css?v=4.0.0" rel="stylesheet">
+    <base target="_blank">
+
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    <form class="form-horizontal m-t" id="signupForm">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">旧密码：</label>
+                            <div class="col-sm-8">
+                                <input id="oldPassword" name="oldPassword" class="form-control" type="password">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">新密码：</label>
+                            <div class="col-sm-8">
+                                <input id="password" name="password" class="form-control" type="password">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">确认新密码：</label>
+                            <div class="col-sm-8">
+                                <input id="confirm_password" name="confirm_password" class="form-control"
+                                       type="password">
+                                <span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 请再次输入您的密码</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-8 col-sm-offset-8">
+                                <button class="btn btn-primary" type="submit">提交</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/js/jquery.min.js?v=2.1.4"></script>
+<script src="/js/bootstrap.min.js?v=3.3.5"></script>
+<script src="/js/content.min.js?v=1.0.0"></script>
+<script src="/js/plugins/validate/jquery.validate.min.js"></script>
+<script src="/js/plugins/validate/messages_zh.min.js"></script>
+<script src="/js/plugins/layer-pc/layer.js"></script>
+<script src="/common/form-validator.js"></script>
+<script src="/common/hmtool.js"></script>
+<script src="/js/jquery.cookie.js"></script>
+<script type="text/javascript">
+    checkPowerAndJump("ADDSYSUSER");
+    $(function () {
+        var e = "<i class='fa fa-times-circle'></i> ";
+        $("#signupForm").validate({
+            rules: {
+                oldPassword: {
+                    required: !0,
+                    minlength: 2
+                },
+                password: {
+                    required: !0,
+                    minlength: 5
+                },
+                confirm_password: {
+                    required: !0,
+                    minlength: 5,
+                    equalTo: "#password"
+                }
+            },
+            messages: {
+                oldPassword: {
+                    required: e + "请输入您的密码",
+                    minlength: e + "密码必须5个字符以上"
+                },
+                password: {
+                    required: e + "请输入您的密码",
+                    minlength: e + "密码必须5个字符以上"
+                },
+                confirm_password: {
+                    required: e + "请再次输入密码",
+                    minlength: e + "密码必须5个字符以上",
+                    equalTo: e + "两次输入的密码不一致"
+                },
+            },
+            submitHandler: function (form) {
+                var data = serializeForm(form);
+                var formData = JSON.stringify(data);
+                var req = {};
+                req['reqJSON'] = {
+                    type: 'put',
+                    url: SSO_URL + 'sy/sysuser/updateLoginPwd',
+                    data: formData
+                };
+                req['useToken'] = true;
+
+                req['successFn'] = function (respData) {
+                    layer.msg(respData.message, {icon: 6}, function () {
+                        if (respData.code == SUCCESS_CODE) {
+                            form.reset();
+//     						 	var index = parent.layer.getFrameIndex(window.name); //获取窗口索引  
+//    	                        	parent.layer.close(index);  
+                        }
+                    });
+                };
+
+                ajaxRequest(req);
+            }
+        })
+    });
+</script>
+</body>
+</html>

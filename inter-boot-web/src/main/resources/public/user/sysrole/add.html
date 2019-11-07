@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="/css/bootstrap.min.css?v=3.3.5" rel="stylesheet">
+    <link href="/css/font-awesome.min.css?v=4.4.0" rel="stylesheet">
+    <link href="/css/animate.min.css" rel="stylesheet">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+    <link href="/css/style.min.css?v=4.0.0" rel="stylesheet">
+    <base target="_blank">
+
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    <form class="form-horizontal m-t" id="signupForm">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">角色代码：</label>
+                            <div class="col-sm-8">
+                                <input id="roleid" name="roleid" class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">角色名称：</label>
+                            <div class="col-sm-8">
+                                <input id="roledesc" name="roledesc" class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-8 col-sm-offset-8">
+                                <button class="btn btn-primary" type="submit">提交</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/js/jquery.min.js?v=2.1.4"></script>
+<script src="/js/bootstrap.min.js?v=3.3.5"></script>
+<script src="/js/content.min.js?v=1.0.0"></script>
+<script src="/js/plugins/validate/jquery.validate.min.js"></script>
+<script src="/js/plugins/validate/messages_zh.min.js"></script>
+<script src="/js/plugins/layer-pc/layer.js"></script>
+<script src="/common/form-validator.js"></script>
+<script src="/common/hmtool.js"></script>
+<script src="/js/jquery.cookie.js"></script>
+<script type="text/javascript">
+    checkPowerAndJump("ADDSYSROLE");
+    $(function () {
+        var e = "<i class='fa fa-times-circle'></i> ";
+        $("#signupForm").validate({
+            rules: {
+                roleid: {
+                    required: true,
+                    isWord: true,
+                    maxlength: 15
+                },
+                roledesc: {
+                    required: true,
+                    maxlength: 50
+                }
+            },
+            messages: {
+                roleid: {
+                    required: e + "请输入角色代码",
+                    maxlength: e + "角色代码不能超过15个字符"
+                },
+                roledesc: {
+                    required: e + "请输入角色名称",
+                    maxlength: e + "角色名称"
+                }
+            },
+            submitHandler: function (form) {
+                var data = serializeForm(form);
+                var formData = JSON.stringify(data);
+                var req = {};
+                req['reqJSON'] = {
+                    type: 'post',
+                    url: SSO_URL + 'sy/sysrole/saveRole',
+                    data: formData
+                };
+                req['useToken'] = true;
+
+                req['successFn'] = function (respData) {
+                    if (respData.code == SUCCESS_CODE) {
+                        parent.refreshGrid('sysRoleTable');
+                    }
+                    layer.msg(respData.message, {icon: 6}, function () {
+                        if (respData.code == SUCCESS_CODE) {
+                            var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+                            parent.layer.close(index);
+                        }
+                    });
+                };
+
+                ajaxRequest(req);
+            }
+        })
+    });
+</script>
+</body>
+</html>

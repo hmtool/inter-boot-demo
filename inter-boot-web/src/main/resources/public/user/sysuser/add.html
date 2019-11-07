@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="/css/bootstrap.min.css?v=3.3.5" rel="stylesheet">
+    <link href="/css/font-awesome.min.css?v=4.4.0" rel="stylesheet">
+    <link href="/css/animate.min.css" rel="stylesheet">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+    <link href="/css/style.min.css?v=4.0.0" rel="stylesheet">
+    <base target="_blank">
+
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    <form class="form-horizontal m-t" id="signupForm">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">用户名：</label>
+                            <div class="col-sm-8">
+                                <input id="username" name="username" class="form-control" type="text"
+                                       aria-required="true" aria-invalid="true" class="error">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">密码：</label>
+                            <div class="col-sm-8">
+                                <input id="password" name="password" class="form-control" type="password">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">确认密码：</label>
+                            <div class="col-sm-8">
+                                <input id="confirm_password" name="confirm_password" class="form-control"
+                                       type="password">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">E-mail：</label>
+                            <div class="col-sm-8">
+                                <input id="email" name="email" class="form-control" type="email">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">固定电话：</label>
+                            <div class="col-sm-8">
+                                <input id="tel" name="tel" class="form-control" type="number">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">移动电话：</label>
+                            <div class="col-sm-8">
+                                <input id="mobilephone" name="mobilephone" class="form-control" type="number">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">地址：</label>
+                            <div class="col-sm-8">
+                                <input id="address" name="address" class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-8 col-sm-offset-8">
+                                <button class="btn btn-primary" type="submit">提交</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/js/jquery.min.js?v=2.1.4"></script>
+<script src="/js/bootstrap.min.js?v=3.3.5"></script>
+<script src="/js/content.min.js?v=1.0.0"></script>
+<script src="/js/plugins/validate/jquery.validate.min.js"></script>
+<script src="/js/plugins/validate/messages_zh.min.js"></script>
+<script src="/js/plugins/layer-pc/layer.js"></script>
+<script src="/common/form-validator.js"></script>
+<script src="/common/hmtool.js"></script>
+<script src="/js/jquery.cookie.js"></script>
+<script type="text/javascript">
+    checkPowerAndJump("ADDSYSUSER");
+    $().ready(function () {
+        jQuery.validator.addMethod("isblank", function (value, element) {
+            var pwdblank = /^\S*$/;
+            return this.optional(element) || (pwdblank.test(value));
+        }, "请输入正确格式的密码");
+        var e = "<i class='fa fa-times-circle'></i> ";
+        $("#signupForm").validate({
+            rules: {
+                username: {
+                    required: !0,
+                    minlength: 2,
+                    maxlength: 12
+                },
+                password: {
+                    required: !0,
+                    isblank: true,
+                    minlength: 6,
+                    maxlength: 30
+                },
+                confirm_password: {
+                    required: !0,
+                    equalTo: "#password"
+                },
+                email: {
+                    required: !0,
+                    email: !0
+                },
+                mobilephone: {
+                    required: !0,
+                    isPhone: !0,
+                    maxlength: 11
+                },
+                tel: {
+//                            required: !0,
+                    isTel: !0,
+                    maxlength: 11
+                },
+                address: {
+                    required: !0,
+                    minlength: 3,
+                    maxlength: 100,
+
+                }
+            },
+            messages: {
+                username: {
+                    required: e + "请输入您的用户名",
+                    minlength: e + "用户名必须两个字符以上",
+                    maxlength: e + "最大长度为12个字符"
+                },
+                password: {
+                    required: e + "请输入您的密码",
+                    minlength: e + "密码必须6个字符以上",
+                    maxlength: e + "最大长度为30个字符"
+                },
+                confirm_password: {
+                    required: e + "请输入您的密码",
+                    equalTo: e + "两次输入的密码不一致"
+                },
+                email: {
+                    required: e + "请输入您的邮箱",
+                    email: e + "邮箱格式不正确"
+                },
+                mobilephone: {
+                    required: e + "请输入移动电话",
+                    isPhone: e + "请输入正确的移动电话",
+                    maxlength: e + "请输入正确的移动电话"
+                },
+                tel: {
+//                            required: e + "请输入固定电话",
+                    isTel: e + "请输入正确的固定电话",
+                    maxlength: e + "请输入正确的固定电话"
+                },
+                address: {
+                    required: e + "请输入地址内容",
+                    minlength: e + "最少字符为3位",
+                    maxlength: e + "最多字符不能超过20位"
+                }
+            },
+            submitHandler: function (form) {
+                var data = serializeForm(form);
+                var formData = JSON.stringify(data);
+                var req = {};
+                req['reqJSON'] = {
+                    type: 'post',
+                    url: SSO_URL + 'sy/sysuser/saveUser',
+                    data: formData
+                };
+                req['useToken'] = true;
+
+                req['successFn'] = function (respData) {
+                    layer.msg(respData.message, {icon: 6}, function () {
+                        if (respData.code == SUCCESS_CODE) {
+                            var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+                            parent.layer.close(index);
+                        }
+                    });
+                };
+                ajaxRequest(req);
+            }
+        })
+    });
+
+</script>
+</body>
+</html>

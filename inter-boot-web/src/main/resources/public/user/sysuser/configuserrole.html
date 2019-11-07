@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="/css/bootstrap.min.css?v=3.3.5" rel="stylesheet">
+    <link href="/css/font-awesome.min.css?v=4.4.0" rel="stylesheet">
+    <link href="/css/animate.min.css" rel="stylesheet">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+    <link href="/css/style.min.css?v=4.0.0" rel="stylesheet">
+    <base target="_blank">
+    <link rel="stylesheet" href="/css/plugins/jquery-treegrid/css/jquery.treegrid.css">
+</head>
+<body class="gray-bg">
+<!-- Panel Other -->
+<div class="ibox float-e-margins">
+    <table id="configRoleTable" class="table tree table-bordered table-striped table-condensed">
+    </table>
+    <div class="form-group">
+        <div class="col-sm-8 col-sm-offset-8">
+            <form class="form-horizontal m-t" id="signupForm">
+                <input type="hidden" name="userid" id="userid" value=""/>
+                <input type="hidden" name="roleid" id="roleid" value=""/>
+            </form>
+            <div class="form-group">
+                <div class="col-sm-8 col-sm-offset-8">
+                    <button class="btn btn-primary" id="setConfigBtn" type="button">提交</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/js/jquery.min.js?v=2.1.4"></script>
+<script src="/js/bootstrap.min.js?v=3.3.5"></script>
+<script src="/js/content.min.js?v=1.0.0"></script>
+<script src="/js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="/js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+<script src="/js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="/common/hmtool.js"></script>
+<script src="/common/bootstrap-table.js"></script>
+<script src="/common/form.js"></script>
+<script src="/js/plugins/layer-pc/layer.js"></script>
+<script src="/js/jquery.cookie.js"></script>
+<script src="/js/jquery.serialize-object.min.js"></script>
+<script type="text/javascript">
+    checkPowerAndJump("CONFIGSYSUSERROLE");
+    $(function () {
+        $("#userid").val(GetQueryString("userid"));
+        var config = {
+            queryParams: {
+                userid: $("#userid").val()
+            },
+            url: SSO_URL + "sy/sysuserrole/queryUserRoleCheck",
+            id: 'configRoleTable',
+            idField: 'funid',
+            columns: [{
+                field: 'checked',
+                checkbox: true
+            }, {
+                field: 'roleid',
+                title: '角色代码'
+            }, {
+                field: 'roledesc',
+                title: '角色名称'
+            }]
+        };
+        initTable(config);
+        $("#setConfigBtn").click(function () {
+            var selects = $('#configRoleTable').bootstrapTable('getSelections');
+            var roleIds = [];
+            for (var i = 0; i < selects.length; i++) {
+                roleIds.push(selects[i].roleid);
+            }
+            $("#roleid").val(roleIds.join(','));
+            var data = $("#signupForm").serializeObject();
+            var formData = JSON.stringify(data);
+            var req = {};
+            req['reqJSON'] = {
+                type: 'post',
+                url: SSO_URL + 'sy/sysuserrole/setRoleUser',
+                data: formData
+            };
+            req['useToken'] = true;
+            req['successFn'] = function (respData) {
+                layer.msg(respData.message, {icon: 6}, function () {
+                    if (respData.code == SUCCESS_CODE) {
+                        var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+                        parent.layer.close(index);
+                    }
+                });
+            };
+            ajaxRequest(req);
+        })
+    });
+</script>
+</body>
+</html>

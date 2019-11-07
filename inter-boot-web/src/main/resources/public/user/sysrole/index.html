@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link href="/css/bootstrap.min.css?v=3.3.5" rel="stylesheet">
+    <link href="/css/font-awesome.min.css?v=4.4.0" rel="stylesheet">
+    <link href="/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <link href="/css/animate.min.css" rel="stylesheet">
+    <link href="/css/style.min.css?v=4.0.0" rel="stylesheet">
+    <!-- 搜索样式CSS-Start -->
+    <link href="/common/css/searchStyle.css" rel="stylesheet">
+    <!-- 搜索样式CSS-End -->
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <!-- Panel Other -->
+    <div class="ibox float-e-margins">
+        <div class="ibox-content">
+            <div class="row row-lg">
+                <div class="col-sm-12">
+                    <!-- Example Events -->
+                    <div class="example-wrap">
+                        <div class="btn-group hidden-xs" id="exampleTableEventsToolbar" role="group">
+                            <div class="seach-context">
+                                <label>角色名 :</label><input id="rolename" placeholder="请输入角色名">
+                            </div>
+                            <button id="resetBtn" type="button" class="btn btn-w-m btn-success">重置</button>
+                            <button id="addBtn" type="button" power="ADDSYSROLE" class="btn btn-w-m btn-success">新增
+                            </button>
+                            <button id="searchBtn" type="button" class="btn btn-w-m btn-success">查询</button>
+                        </div>
+                        <table id="sysRoleTable">
+                        </table>
+                    </div>
+                </div>
+                <!-- End Example Events -->
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Panel Other -->
+<script src="/js/jquery.min.js?v=2.1.4"></script>
+<script src="/js/bootstrap.min.js?v=3.3.5"></script>
+<script src="/js/content.min.js?v=1.0.0"></script>
+<script src="/js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="/js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+<script src="/js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="/common/hmtool.js"></script>
+<script src="/common/bootstrap-table.js"></script>
+<script src="/common/form.js"></script>
+<script src="/js/plugins/layer-pc/layer.js"></script>
+<script src="/js/jquery.cookie.js"></script>
+<script src="/common/bootstrap-table-treetable.js"></script>
+<script type="text/javascript">
+    var loadConfigWin = false;
+    checkPowerAndJump("QRYSYSROLE");
+    $(function () {
+        $('#resetBtn').click(function () {
+            $('#rolename').val('');
+            refreshGrid('sysRoleTable');
+        });
+        $('#addBtn').click(function () {
+            layer.open({
+                type: 2,
+                title: '新增系统角色',
+                shade: 0.8,
+                area: ['380px', '80%'],
+                content: ['/user/sysrole/add.html', 'auto'], //iframe的url，no代表不显示滚动条
+                end: function () { //此处用于演示
+                    refreshGrid('sysRoleTable');
+                },
+                success: function () {
+                }
+            });
+        });
+
+        $('#searchBtn').click(function () {
+            refreshGrid('sysRoleTable');
+        });
+        var table = {};
+        table['id'] = 'sysRoleTable';
+        table['url'] = SSO_URL + 'sy/sysrole/queryRoleByPage';
+        table['pagination'] = true,
+            table['queryParams'] = function (params) {
+                var queryParams = queryBaseParams(params);
+                queryParams['roledesc'] = $('#rolename').val();
+                queryParams['mobilephone'] = $('#mobilephone').val();
+                return queryParams;
+            };
+        table['columns'] = [{
+            field: 'roleid',
+            title: '角色代码'
+        }, {
+            field: 'roledesc',
+            title: '角色名'
+        }, {
+            field: 'markflag',
+            title: '状态',
+            formatter: function (value, row, index) {
+                return value == 0 ? '有效' : '无效';
+            }
+        }, {
+            field: "opt",
+            title: "操作",
+            width: 200,
+            formatter: function (value, row, index) {
+                var html = "";
+                if (checkPower("MODSYSROLE")) {
+                    html += '<a class="edit" href="javascript:void(0)" title="修改">修改</a>&nbsp;&nbsp;&nbsp;';
+                }
+                if (checkPower("CONFIGSYSROLE")) {
+                    html += '<a class="config" href="javascript:void(0)" title="配置权限">配置权限</a>&nbsp;&nbsp;&nbsp;';
+                }
+                if (checkPower("DELSYSROLE")) {
+                    html += '<a class="del" href="javascript:void(0)" title="删除">删除</a>&nbsp;&nbsp;&nbsp;';
+                }
+                return html;
+            },
+            events: {
+                'click .edit': function (e, value, row, index) {
+                    layer.open({
+                        type: 2,
+                        title: '修改系统角色',
+                        shade: 0.8,
+                        area: ['380px', '80%'],
+                        content: ['/user/sysrole/edit.html', 'auto'], //iframe的url，no代表不显示滚动条
+                        end: function () { //此处用于演示
+                            refreshGrid('sysRoleTable');
+                        },
+                        success: function (layers, index) {
+                            var body = layer.getChildFrame('body', index);
+                            var FormOptions = {};
+                            FormOptions['jsonValue'] = row;
+                            body.find('#signupForm').initForm(FormOptions);
+                        }
+                    });
+                },
+                'click .del': function (e, value, row, index) {
+                    layer.confirm('是否将当前角色删除', {
+                        btn: ['是', '否'] //按钮
+                    }, function () {
+                        var formData = JSON.stringify({roleid: row['roleid']});
+                        var req = {};
+                        req['reqJSON'] = {
+                            type: 'delete',
+                            url: SSO_URL + 'sy/sysrole/deleteRole?roleid=' + row.roleid,
+                            data: {}
+                        };
+                        req['successFn'] = function (respData) {
+                            layer.msg(respData.message, {icon: 6}, function () {
+
+                            });
+                            if (respData.code == SUCCESS_CODE) {
+                                refreshGrid('sysRoleTable');
+                            }
+                        };
+
+                        ajaxRequest(req);
+                    });
+                },
+                'click .config': function (e, value, row, index) {
+                    layer.open({
+                        type: 2,
+                        title: '配置角色权限',
+                        shade: 0.8,
+                        area: ['700px', '90%'],
+                        content: ['/user/sysrole/configrole.html?roleid=' + row.roleid, 'auto'], //iframe的url，no代表不显示滚动条
+                        success: function (layers, index) {
+                            var body = layer.getChildFrame('body', index);
+                        }
+                    });
+                }
+            }
+        }];
+        initTable(table);
+    });
+
+</script>
+</body>
+</html>

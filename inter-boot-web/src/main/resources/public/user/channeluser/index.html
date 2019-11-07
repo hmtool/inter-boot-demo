@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link href="/css/bootstrap.min.css?v=3.3.5" rel="stylesheet">
+    <link href="/css/font-awesome.min.css?v=4.4.0" rel="stylesheet">
+    <link href="/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <link href="/css/animate.min.css" rel="stylesheet">
+    <link href="/css/style.min.css?v=4.0.0" rel="stylesheet">
+    <!-- 搜索样式CSS-Start -->
+    <link href="/common/css/searchStyle.css" rel="stylesheet">
+    <!-- 搜索样式CSS-End -->
+    <!-- 下拉 -->
+    <link href="/css/plugins/chosen/chosen.css" rel="stylesheet">
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <!-- Panel Other -->
+    <div class="ibox float-e-margins">
+        <div class="ibox-content">
+            <div class="row row-lg">
+                <div class="col-sm-12">
+                    <!-- Example Events -->
+                    <div class="example-wrap">
+                        <div class="btn-group hidden-xs" id="exampleTableEventsToolbar" role="group">
+                            <form id="seachform">
+                                <div class="seach-context">
+                                    <label>渠道人名称 :</label><input id="channelUserName" placeholder="请输入渠道人名称 "/>
+                                    <label>渠道人电话 :</label><input id="mobileIphone" type="number"
+                                                                 placeholder="请输入渠道人电话 "/>
+                                </div>
+                                <button id="resetBtn" type="button" class="btn btn-w-m btn-success">重置</button>
+                                <button id="searchBtn" type="button" class="btn btn-w-m btn-success">查询</button>
+                            </form>
+                        </div>
+                        <table id="channelUserTable">
+                        </table>
+                    </div>
+                </div>
+                <!-- End Example Events -->
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Panel Other -->
+<script src="/js/jquery.min.js?v=2.1.4"></script>
+<script src="/js/bootstrap.min.js?v=3.3.5"></script>
+<script src="/js/content.min.js?v=1.0.0"></script>
+<script src="/js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="/js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+<script src="/js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="/common/hmtool.js"></script>
+<script src="/common/bootstrap-table.js"></script>
+<script src="/common/form.js"></script>
+<script src="/js/plugins/layer-pc/layer.js"></script>
+<script src="/js/jquery.cookie.js"></script>
+<!-- 组件通用 -->
+<script src="/common/frame.js"></script>
+<!-- 下拉 -->
+<script src="/js/plugins/chosen/chosen.jquery.js"></script>
+<script type="text/javascript">
+    checkPowerAndJump("QRYCHANNELUSER");
+    $(function () {
+        $('#resetBtn').click(function () {
+            $('#seachform').resetForm();
+        });
+        $('#searchBtn').click(function () {
+            refreshGrid('channelUserTable');
+        });
+        var table = {};
+        table['id'] = 'channelUserTable';
+        table['url'] = SSO_URL + 'sy/syschan/queryChanByPage';
+        table['pagination'] = true,
+            table['queryParams'] = function (params) {
+                var queryParams = queryBaseParams(params);
+                queryParams['channelUserName'] = $('#channelUserName').val();
+                queryParams['mobilephone'] = $('#mobileIphone').val();
+                return queryParams;
+            };
+        table['columns'] = [{
+            field: 'channelUserNickname',
+            title: '用户昵称'
+        }, {
+            field: 'channelUserName',
+            title: '渠道人名称'
+        }, {
+            field: 'mobilephone',
+            title: '渠道人电话'
+        }, {
+            field: 'cardNo',
+            title: '身份证号'
+        }, {
+            field: 'availableName',
+            title: '有效状态'
+        }, {
+            field: 'frozenStatusName',
+            title: '冻结状态'
+        }, {
+            field: 'identifyFlagName',
+            title: '认证标示'
+        }, {
+            field: 'registDate',
+            title: '注册时间',
+            formatter: function (value, row, index) {
+                return timeTransfoDate(value);
+            }
+        }, {
+            field: 'registAddr',
+            title: '注册地址'
+        }, {
+            field: "opt",
+            title: "操作",
+            width: 280,
+            formatter: function (value, row, index) {
+                var frozen = row['frozenStatus'] == 1 ? '解冻' : '冻结';
+                var frozenStyle = row['frozenStatus'] == 1 ? 'style="color:red";' : 'style="color:#337ab7"';
+
+                var available = row['available'] == 0 ? '解锁' : '锁定';
+                var availableStyle = row['available'] == 0 ? 'style="color:red";' : 'style="color:#337ab7"';
+                var html = '';
+                console.log(row['available'])
+                if (row['available'] == 1) {
+                    if (checkPower("CHANNELBLOCKEDACCOUNT")) {
+                        html += '<a class="blocked" ' + frozenStyle + ' href="javascript:void(0)" title="' + frozen + '账户">' + frozen + '账户</a>&nbsp;&nbsp;&nbsp;';
+                    }
+                    if (checkPower("CHANNELSCROCEMOD")) {
+                        html += '<a class="scroceEdit" href="javascript:void(0)" title="分值修改">分值修改</a>&nbsp;&nbsp;&nbsp;';
+                    }
+                    if (checkPower("CHNANELPWDMOD")) {
+                        html += '<a class="pwdEdit" href="javascript:void(0)" title="密码修改">密码修改</a>&nbsp;&nbsp;&nbsp;';
+                    }
+                }
+                if (checkPower("CHANNELLOCKING")) {
+                    html += '<a class="lock" ' + availableStyle + ' href="javascript:void(0)" title="' + available + '">' + available + '</a>&nbsp;&nbsp;&nbsp;';
+                }
+                return html;
+            }, events: {
+                'click .blocked': function (e, value, row, index) {
+                    var frozen = row['frozenStatus'] == 1 ? '解冻' : '冻结';
+                    var frozenStatus = row['frozenStatus'] == 0 ? 1 : 0;
+                    layer.confirm('确定' + frozen + '此账号吗?', {
+                        btn: ['确定' + frozen, '考虑一下']
+                    }, function () {
+                        var req = {};
+                        var data = {'frozenStatus': frozenStatus, 'userId': row['channelUserId']};
+                        req['reqJSON'] = {
+                            type: 'put',
+                            data: JSON.stringify(data),
+                            url: SSO_URL + 'sy/syschan/freezeChanAccount'
+                        };
+                        req['useToken'] = true;
+                        req['successFn'] = function (respData) {
+                            layer.msg(respData.message, {icon: 1, time: 1000}, function () {
+                                if (respData.code == SUCCESS_CODE) {
+                                    refreshGrid('channelUserTable');
+                                }
+                            });
+                        };
+                        ajaxRequest(req);
+                    });
+                },
+                'click .lock': function (e, value, row, index) {
+                    var available = row['available'] == 0 ? '解锁' : '锁定';
+                    layer.confirm('是否' + available + '当前用户', {
+                        btn: ['确定' + available, '考虑一下']
+                    }, function () {
+                        var req = {};
+                        var data = {reqSource: '1', 'userid': row['channelUserId']};
+                        req['reqJSON'] = {
+                            type: 'put',
+                            data: JSON.stringify(data),
+                            url: SSO_URL + 'sy/syschan/lockUser'
+                        };
+                        req['useToken'] = true;
+                        req['successFn'] = function (respData) {
+                            layer.msg(respData.message, {icon: 1, time: 1000}, function () {
+                                if (respData.code == SUCCESS_CODE) {
+                                    refreshGrid('channelUserTable');
+                                }
+                            });
+                        };
+                        ajaxRequest(req);
+                    });
+                },
+                'click .scroceEdit': function (e, value, row, index) {
+                    var req = {};
+                    req['reqJSON'] = {
+                        type: 'get',
+                        url: SSO_URL + 'sy/syschan/getChanPoint?userId=' + row['channelUserId']
+                    }
+                    req['useToken'] = true;
+                    req['successFn'] = function (respData) {
+                        layer.open({
+                            type: 2,
+                            title: '渠道人用户分值修改',
+                            shade: 0.8,
+                            area: ['300px', '50%'],
+                            content: ['/user/channeluser/scroceedit.html', 'auto'], //iframe的url，no代表不显示滚动条
+                            end: function () { //此处用于演示
+                                refreshGrid('channelUserTable');
+                            },
+                            success: function (layers, index) {
+                                var body = layer.getChildFrame('body', index);
+                                body.find('#userid').val(row['channelUserId']);
+                                body.find('#oldAccPoint').val(respData.data);
+                            }
+                        });
+                    }
+                    ajaxRequest(req);
+                },
+                'click .pwdEdit': function (e, value, row, index) {
+                    layer.open({
+                        type: 2,
+                        title: '渠道人用户修改密码',
+                        shade: 0.8,
+                        area: ['300px', '50%'],
+                        content: ['/user/channeluser/pwdedit.html', 'auto'],
+                        end: function () {
+                            refreshGrid('channelUserTable');
+                        }, success: function (layers, index) {
+                            var body = layer.getChildFrame('body', index);
+                            body.find("#userId").val(row['channelUserId']);
+                        }
+                    });
+                }
+            }
+        }];
+        initTable(table);
+    });
+</script>
+</body>
+</html>
