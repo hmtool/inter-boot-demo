@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="/css/bootstrap.min.css?v=3.3.5" rel="stylesheet">
+    <link href="/css/font-awesome.min.css?v=4.4.0" rel="stylesheet">
+    <link href="/css/animate.min.css" rel="stylesheet">
+    <!--     <meta content="application/json"/> -->
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+    <link href="/css/style.min.css?v=4.0.0" rel="stylesheet">
+    <base target="_blank">
+    <style type="text/css">
+        .kj_a {
+            color: white !important;
+        }
+
+        .kj_a:hover {
+            color: white !important;
+        }
+
+        .kj_a:active {
+            color: white !important;
+        }
+
+        .kj_a:visited {
+            color: white !important;
+        }
+    </style>
+</head>
+
+<body style="background:rgba(0,0,0,0.6);overflow:hidden">
+<div style="color:white;margin-top:20px;margin-left:100px;height: 25px;line-height:25px">
+    <a funid='TOP' class="kj_a" href='javascript:void()' onclick='loadParentTreeToKj(this,0)'>父功能</a><span
+        id="extTitle"></span></div>
+<HR style="margin-top:10px" SIZE=1>
+<div align="center" style="display: -webkit-box;display: -moz-box; display:-webkit-flex;
+    display: -ms-flexbox;display:flex;align-items: center;height:70%;height:-moz-calc(100% - 100px); height:-webkit-calc(100% -100px); height: calc(100% - 100px);justify-content: center;">
+    <div id="menu" style="text-align: center;color:white;min-height: 100px;min-width: 100px;">
+
+    </div>
+</div>
+
+
+<script src="/js/jquery.min.js?v=2.1.4"></script>
+<script src="/js/bootstrap.min.js?v=3.3.5"></script>
+<script src="/js/content.min.js?v=1.0.0"></script>
+<script src="/js/plugins/validate/jquery.validate.min.js"></script>
+<script src="/js/plugins/validate/messages_zh.min.js"></script>
+<script src="/js/plugins/layer-pc/layer.js"></script>
+<script src="/common/form-validator.js"></script>
+<script src="/common/hmtool.js"></script>
+<script src="/js/jquery.cookie.js"></script>
+<script src="/js/Context.js"></script>
+
+<script type="text/javascript">
+    checkPowerAndJump("QRYSYSFUN");
+    var currentLevel = 0;
+    $(function () {
+        context.init({preventDoubleContext: false});
+        loadParentTree({botflag: '1'}, currentLevel);
+    });
+
+    function loadParentTree(data, level) {
+        var fundesc = $('.funmenu[funid="' + data.parentid + '"]').attr("fundesc");
+        if (level > 0) {
+            var obj = $("#extTitle").find('a[funid="' + data.parentid + '"]');
+            if (obj.length > 0) {//删除该节点之后的所有节点
+                $(obj).nextAll().remove();
+            } else {
+                var html = "<span>>></span>";
+                html += "<a funid='" + data.parentid + "' class='kj_a'  href='javascript:void()' onclick='loadParentTreeToKj(this," + level + ")' >";
+                html += fundesc;
+                html += "</a>";
+                $("#extTitle").append(html);
+            }
+        }
+        $("#menu").html('');
+        var req = {};
+        req['reqJSON'] = {
+            type: 'get',
+            url: SSO_URL + 'sy/sysfun/queryFunTree',
+            data: data
+        };
+        req['useToken'] = true;
+        req['successFn'] = function (respData) {
+            if (respData.code == SUCCESS_CODE) {
+                var defalutUrl = "/img/default_fun.png";
+                for (var i = 0; i < respData.data.result.length; i++) {
+                    var row = respData.data.result[i];
+                    $("#menu").append(getParentMenuHtml(row, defalutUrl, level))
+                    if (row.attachid != '') {
+                        loadFileUrl(row);
+                    }
+                }
+                $(".funmenu").click(function () {//如果有子
+                    var hasMenuChild = $(this).attr("hasMenuChild");
+                    if (hasMenuChild == "true") {//下一级
+                        currentLevel++;
+                        loadParentTree({botflag: '1', parentid: $(this).attr("funid")}, currentLevel);
+                    } else {//选中
+                        setParentName(this);
+                    }
+                })
+                context.attach('.funmenu', [
+                    {
+                        text: '选定', action: function (e) {
+                            e.preventDefault();
+                            var obj = $(document).data('rightEventElement');
+                            setParentName(obj);
+                        }
+                    }
+                ]);
+            }
+        };
+        ajaxRequest(req);
+    }
+
+    function setParentName(obj) {
+        window.parent.parentNameWin.setParentFun($(obj).attr("funid"), $(obj).attr("fundesc"));
+        var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+        parent.layer.close(index);
+    }
+
+    function loadFileUrl(row) {
+        var thatRow = row;
+        var attachUrl = null;
+        var req = {};
+        req['reqJSON'] = {
+            type: 'get',
+            url: FILE_URL + '/getById',
+            data: {id: row.attachid}
+        };
+        req['useToken'] = true;
+        req['successFn'] = function (respData) {
+            if (respData.code == SUCCESS_CODE) {
+                if (respData.data != null && respData.data.length > 0) {
+                    var attachUrl = respData.data[0];
+                    if (attachUrl != null) {
+                        var defalutUrl = FILE_VIEW_URL + attachUrl;
+                        $('.funmenu[funid="' + thatRow.funid + '"]').find("img").attr("src", defalutUrl);
+                    }
+
+                }
+            }
+        };
+        ajaxRequest(req);
+
+    }
+
+    function getParentMenuHtml(row, imgUrl, level) {
+        var html = '<div style="float:left;margin-left:20px;" class="funmenu" level="' + level + '" fundesc="' + row.fundesc + '" funid="' + row.funid + '"  childMenuSize="' + row.childMenuSize + '" hasMenuChild="' + row.hasMenuChild + '">';
+        html += '<img src="' + imgUrl + '" width="60px" height="60px"></img>';
+        if (row.childMenuSize > 0) {
+            html += '<span style="margin-top:-20px;position:absolute;">' + row.childMenuSize + '</span>';
+        }
+        html += '<div style="margin-top:10px">' + row.fundesc + '</div>';
+        html += '</div>';
+        return html;
+    }
+
+    function loadParentTreeToKj(obj, level) {
+        currentLevel = level;
+        loadParentTree({botflag: '1', parentid: $(obj).attr("funid")}, level);
+    }
+</script>
+</body>
+</html>

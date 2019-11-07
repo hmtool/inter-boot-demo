@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link href="/css/bootstrap.min.css?v=3.3.5" rel="stylesheet">
+    <link href="/css/font-awesome.min.css?v=4.4.0" rel="stylesheet">
+    <link href="/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <link href="/css/animate.min.css" rel="stylesheet">
+    <link href="/css/style.min.css?v=4.0.0" rel="stylesheet">
+    <!-- 搜索样式CSS-Start -->
+    <link href="/common/css/searchStyle.css" rel="stylesheet">
+    <!-- 搜索样式CSS-End -->
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <!-- Panel Other -->
+    <div class="ibox float-e-margins">
+        <div class="ibox-content">
+            <div class="row row-lg">
+                <div class="col-sm-12">
+                    <!-- Example Events -->
+                    <div class="example-wrap">
+                        <div class="btn-group hidden-xs" id="exampleTableEventsToolbar" role="group">
+                            <form id="seachform">
+                                <div class="seach-context">
+                                    <label>用户名 :</label><input id="username" placeholder="请输入用户名">
+                                    <label>联系电话 :</label><input type="number" id="mobilephone" placeholder="请输入移动电话"/>
+                                </div>
+                                <button id="resetBtn" type="button" class="btn btn-w-m btn-white">重置</button>
+                                <button id="addBtn" type="button" power="ADDSYSUSER" class="btn btn-w-m btn-success">
+                                    新增
+                                </button>
+                                <button id="searchBtn" type="button" class="btn btn-w-m btn-white">查询</button>
+                            </form>
+                        </div>
+                        <table id="sysUserTable">
+                        </table>
+                    </div>
+                </div>
+                <!-- End Example Events -->
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Panel Other -->
+<script src="/js/jquery.min.js?v=2.1.4"></script>
+<script src="/js/bootstrap.min.js?v=3.3.5"></script>
+<script src="/js/content.min.js?v=1.0.0"></script>
+<script src="/js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="/js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+<script src="/js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="/common/hmtool.js"></script>
+<script src="/common/bootstrap-table.js"></script>
+<script src="/common/form.js"></script>
+<script src="/js/plugins/layer-pc/layer.js"></script>
+<script src="/js/jquery.cookie.js"></script>
+<script type="text/javascript">
+    checkPowerAndJump("QRYSYSUSER");
+    $(function () {
+        $('#resetBtn').click(function () {
+            $('#seachform').resetForm();
+        });
+        $('#addBtn').click(function () {
+            layer.open({
+                type: 2,
+                title: '新增系统用户',
+                shade: 0.8,
+                area: ['380px', '70%'],
+                content: ['/user/sysuser/add.html', 'auto'], //iframe的url，no代表不显示滚动条
+                end: function () { //此处用于演示
+                    refreshGrid('sysUserTable');
+                },
+                success: function () {
+                }
+            });
+        });
+
+        $('#searchBtn').click(function () {
+            refreshGrid('sysUserTable');
+        });
+        var table = {};
+        table['id'] = 'sysUserTable';
+        table['url'] = SSO_URL + 'sy/sysuser/queryUserByPage';
+        table['pagination'] = true,
+            table['queryParams'] = function (params) {
+                var queryParams = queryBaseParams(params);
+                queryParams['username'] = $('#username').val();
+                queryParams['mobilephone'] = $('#mobilephone').val();
+                return queryParams;
+            };
+        table['columns'] = [{
+            field: 'username',
+            title: '用户名'
+        }, {
+            field: 'tel',
+            title: '电话'
+        }, {
+            field: 'mobilephone',
+            title: '联系电话'
+        }, {
+            field: 'address',
+            title: '地址'
+        }, {
+            field: 'available',
+            title: '状态',
+            formatter: function (value, row, index) {
+                return value == 1 ? '正常' : '锁定';
+            }
+        }, {
+            field: "opt",
+            title: "操作",
+            width: 230,
+            formatter: function (value, row, index) {
+                var lockStatus = row['available'] == 0 ? '解锁' : '锁定';
+                var lockStatusStyle = row['available'] == 0 ? 'style="color:red";' : 'style="color:#337ab7"';
+                var html = "";
+                if (row['available'] == 1) {
+                    if (checkPower("MODSYSUSER")) {
+                        html += '<a class="edit" href="javascript:void(0)" title="修改">修改</a>&nbsp;&nbsp;&nbsp;';
+                    }
+                    if (checkPower("CONFIGSYSUSERROLE")) {
+                        html += '<a class="config" href="javascript:void(0)" title="配置角色">配置角色</a>&nbsp;&nbsp;&nbsp;';
+                    }
+                    if (checkPower("RESETPWD")) {
+                        html += '<a class="resetPwd" href="javascript:void(0)" title="重置密码">重置密码</a>&nbsp;&nbsp;&nbsp;';
+                    }
+
+                }
+                if (checkPower("LOCKSYSUSER")) {
+                    html += '<a class="del" ' + lockStatusStyle + ' href="javascript:void(0)" title="' + lockStatus + '">' + lockStatus + '</a>&nbsp;&nbsp;&nbsp;';
+                }
+                return html;
+            },
+            events: {
+//         	 	'click .resetPwd':function(e,value,row,index){
+//         	 		 layer.prompt({title: '新密码',minLength:5,value:'654321', formType: 0},
+//         	 				 function(text, promptIndex){
+//         	 			layer.close(promptIndex);
+//         	 			var formData = JSON.stringify({userid:row['userid'],password:text});
+//     		        	var req = {};
+//     		        	req['reqJSON'] = {
+//     	        			type : 'put',
+//     	        			url : SSO_URL+'sy/sysuser/resetPassword',
+//     	        			data : formData
+//     		        	};
+
+//     		        	req['successFn'] = function(respData){
+//     		        		layer.msg(respData.message, {icon: 6,time:2000},function(){
+//             					if(respData.code == SUCCESS_CODE){
+//             						refreshGrid('sysUserTable');
+//             					}
+//             				}); 
+//     		        	};
+
+//     		        	ajaxRequest(req);
+//         	 		 });
+//         	 	},
+                'click .resetPwd': function (e, value, row, index) {
+                    layer.open({
+                        type: 2,
+                        title: '重置密码',
+                        shade: 0.8,
+                        area: ['380px', '50%'],
+                        content: ['/user/sysuser/reset.html', 'auto'], //iframe的url，no代表不显示滚动条
+                        end: function () { //此处用于演示
+                            refreshGrid('sysUserTable');
+                        },
+                        success: function (layers, index) {
+                            var body = layer.getChildFrame('body', index);
+                            var FormOptions = {};
+                            FormOptions['jsonValue'] = JSON.stringify({userid: row['userid']});
+                            body.find('#signupForm').initForm(FormOptions);
+                        }
+                    });
+                },
+                'click .edit': function (e, value, row, index) {
+                    layer.open({
+                        type: 2,
+                        title: '修改系统用户',
+                        shade: 0.8,
+                        area: ['380px', '80%'],
+                        content: ['/user/sysuser/edit.html', 'auto'], //iframe的url，no代表不显示滚动条
+                        end: function () { //此处用于演示
+                            refreshGrid('sysUserTable');
+                        },
+                        success: function (layers, index) {
+                            var body = layer.getChildFrame('body', index);
+                            var FormOptions = {};
+                            FormOptions['jsonValue'] = row;
+                            body.find('#signupForm').initForm(FormOptions);
+                        }
+                    });
+                },
+                'click .config': function (e, value, row, index) {
+                    layer.open({
+                        type: 2,
+                        title: '配置用户角色',
+                        shade: 0.8,
+                        area: ['380px', '80%'],
+                        content: ['/user/sysuser/configuserrole.html?userid=' + row.userid, 'auto'], //iframe的url，no代表不显示滚动条
+                        success: function (layers, index) {
+
+                        }
+                    });
+                },
+                'click .del': function (e, value, row, index) {
+                    layer.confirm('是否' + (row['available'] == 0 ? '解锁' : '锁定') + '当前用户', {
+                        btn: ['是', '否'] //按钮
+                    }, function () {
+                        var formData = JSON.stringify({userid: row['userid']});
+                        var req = {};
+                        req['reqJSON'] = {
+                            type: 'put',
+                            url: SSO_URL + 'sy/sysuser/lockUser',
+                            data: formData
+                        };
+                        req['successFn'] = function (respData) {
+                            layer.msg(respData.message, {icon: 1, time: 2000}, function () {
+                                if (respData.code == SUCCESS_CODE) {
+                                    refreshGrid('sysUserTable');
+                                }
+                            });
+                        };
+
+                        ajaxRequest(req);
+                    });
+                }
+            }
+        }];
+        initTable(table);
+    });
+</script>
+</body>
+</html>

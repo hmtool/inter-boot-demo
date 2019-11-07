@@ -1,0 +1,58 @@
+<html>
+<head>
+    <title>test</title>
+    <meta charset="utf-8"></meta>
+    <script type="text/javascript" src="/js/plugins/echarts/echarts.min.js"></script>
+    <script type="text/javascript" src="/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/common/hmtool-charts.js"></script>
+    <script src="/common/hmtool.js?V1.0.1"></script>
+</head>
+<body>
+<input id="name"/>
+<button id="button" value="刷新">刷新</button>
+<div id="container" style="height:50%;"></div>
+<script type="text/javascript">
+    var pieCharts,
+        pieChartsConf = {
+            url: '/charts/testPie',
+            type: 'pie',//环形
+            //查询数据方法
+            queryDataFn: function () {
+                return {
+                    name: $('#name').val()
+                };
+            },
+            errorMsgFn: function (err) {
+                console.log(err);
+            },
+            //成功后返回对象。用于刷新获取里面的数据等
+            successFn: function (items) {
+                pieCharts = items;
+            },
+            //组件选项
+            item: {
+                item: $('#container'),
+                name: '测试',
+                //鼠标移动显示
+                formatter: "{a} saasasas<br/>{b}: {c} ({d}%)",
+                //显示的数据对象
+                showData: [{
+                    key: 'a',
+                    name: '测试a'
+                }, {
+                    key: 'b',
+                    name: '测试b'
+                }, {
+                    key: 'c',
+                    name: '测试c'
+                }],
+            }
+        };
+    initCharts(pieChartsConf);
+
+    $('#button').click(function () {
+        refreshPieData(pieCharts);
+    });
+</script>
+</body>
+</html>

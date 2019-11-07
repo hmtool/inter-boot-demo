@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="/css/bootstrap.min.css?v=3.3.5" rel="stylesheet">
+    <link href="/css/font-awesome.min.css?v=4.4.0" rel="stylesheet">
+    <link href="/css/animate.min.css" rel="stylesheet">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+    <link href="/css/style.min.css?v=4.0.0" rel="stylesheet">
+    <base target="_blank">
+    <link href="/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+    <link href="/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
+    <link href="/css/plugins/jasny/jasny-bootstrap.min.css" rel="stylesheet">
+    <style type="text/css">
+        .layui-layer-setwin.layui-layer-close2 {
+            right: -10px !important;
+            top: -10px !important;
+        }
+
+        html, body {
+            -moz-user-select: none;
+            -khtml-user-select: none;
+            user-select: none;
+        }
+
+        .checkbox {
+            display: inline-block;
+            width: 30%;
+            min-height: 39px !important;
+        }
+    </style>
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    <form class="form-horizontal m-t" id="signupForm">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">父功能：</label>
+                            <div class="col-sm-8">
+                                <input type="hidden" name="parentid" id="parentid">
+                                <input name="parentName" id="parentName" class="form-control" type="text"
+                                       readonly="readonly">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">功能代码：</label>
+                            <div class="col-sm-8">
+                                <input id="funid" name="funid" class="form-control" type="text" aria-required="true"
+                                       aria-invalid="true" class="error">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">功能名称：</label>
+                            <div class="col-sm-8">
+                                <input id="fundesc" name="fundesc" class="form-control" type="text" aria-required="true"
+                                       aria-invalid="true" class="error">
+                            </div>
+                        </div>
+                        <!-- checkbox选择Start -->
+                        <div class="checkbox checkbox-info">
+                            <input id="botfalgCheckbox" value="1" name="botflag" type="checkbox"><label
+                                for="botfalgCheckbox">菜单项</label>
+                        </div>
+                        <div class="checkbox checkbox-info">
+                            <input id="useflagCheckbox" value="1" name="useflag" type="checkbox" checked><label
+                                for="useflagCheckbox">可用</label>
+                        </div>
+                        <div class="checkbox checkbox-info">
+                            <input id="displayfunCheckbox" value="1" name="displayfun" type="checkbox"><label
+                                for="displayfunCheckbox">展示权限</label>
+                        </div>
+                        <!-- checkbox选择End -->
+                        <div class="form-group showTrMenu" style="display:none">
+                            <label class="col-sm-3 control-label">菜单路径：</label>
+                            <div class="col-sm-8">
+                                <input id="funpath" name="funpath" class="form-control" type="text" aria-required="true"
+                                       aria-invalid="true" class="error">
+                            </div>
+                        </div>
+                        <div class="form-group showTrMenu" style="display:none">
+                            <label class="col-sm-3 control-label">菜单图标：</label>
+                            <div class="col-sm-8">
+                                <div id="dyFile">
+                                    <input type="hidden" name="attachid" id="attachid"/>
+                                    <input type="file" id="attachFile" name="attachFile" accept="image/*"
+                                           class="form-control">
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">排序值：</label>
+                            <div class="col-sm-8">
+                                <input id="orderval" name="orderval" class="form-control" type="text">
+                            </div>
+                        </div>
+
+                        <div class="form-group" align="center">
+                            <div class="col-sm-8 col-sm-offset-8">
+                                <button class="btn btn-info" type="button" id="addPathBtn">新增可访问路径</button>
+                            </div>
+                        </div>
+
+                        <div class="form-group" align="center" id="addPathTableDiv">
+                            <table id="addPathTable" style="width:100%">
+                            </table>
+                        </div>
+
+
+                        <div class="form-group">
+                            <div class="col-sm-8 col-sm-offset-8">
+                                <button class="btn btn-primary" type="submit">提交</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/js/jquery.min.js?v=2.1.4"></script>
+<script src="/js/bootstrap.min.js?v=3.3.5"></script>
+<script src="/js/content.min.js?v=1.0.0"></script>
+<script src="/js/plugins/validate/jquery.validate.min.js"></script>
+<script src="/js/plugins/validate/messages_zh.min.js"></script>
+<script src="/js/plugins/layer-pc/layer.js"></script>
+<script src="/common/form-validator.js"></script>
+<script src="/common/hmtool.js"></script>
+<script src="/js/jquery.cookie.js"></script>
+<script src="/js/plugins/sweetalert/sweetalert.min.js"></script>
+<script type="text/javascript">
+    checkPowerAndJump("ADDSYSFUN");
+    var currentSize = 0;
+
+    function getAddPathHtml() {
+        var html = '<tr><td width="60px" align="right">访问路径:</td><td><input name="addPath' + currentSize + '" class="addPath form-control help-block m-b-none" type="text"></td><td width="80px"><button class="btn btn-danger" type="button" onclick="removePath(this)">删除</button></td></tr>';
+        currentSize++;
+        return html;
+    }
+
+    function removePath(obj) {
+        $(obj).parent().parent().remove();
+    }
+
+    $(function () {
+        $("#addPathBtn").click(function () {
+            var html = getAddPathHtml();
+            $("#addPathTable").append(html);
+            $.each($("#addPathTable").find("input"), function (i, obj) {
+                $(obj).rules("add", {required: true, maxlength: 100, messages: {maxlength: "最大长度不能超过100"}});
+            })
+        })
+        $("#attachFile").change(function () {
+            var file = this.files[0];
+            if (!checkFileType("attachFile")) {
+                sweetAlert("文件类型错误", "请上传png，jpg图片!", "error");
+                $(this).val('');
+                return;
+            }
+        })
+        $("#parentName").click(function () {
+            parent.layer.open({
+                type: 2,
+                title: false,
+                shade: 0.2,
+                skin: 'layui-layer-self',
+                area: ['100%', '100%'],
+                content: ['/user/sysfun/chooseParent.html', 'auto'], //iframe的url，no代表不显示滚动条
+                success: function (layero, index) {
+                }
+            });
+        })
+        $("input[name='botflag']").click(function () {
+            $("#showTrPower").toggle();
+            $(".showTrMenu").toggle();
+        })
+        var e = "<i class='fa fa-times-circle'></i> ";
+        $("#signupForm").validate({
+            rules: {
+                funid: {
+                    required: true,
+                    maxlength: 30,
+                    isWord: true
+                },
+                fundesc: {
+                    required: true,
+                    maxlength: 100
+                },
+                funpath: {
+                    required: false,
+                    maxlength: 100
+                },
+                orderval: {
+                    required: true,
+                    min: 1,
+                    max: 1000
+                }
+            },
+            messages: {
+                funid: {
+                    required: e + "请输入功能代码",
+                    maxlength: e + "功能代码不能超过30个字符"
+                },
+                fundesc: {
+                    required: e + "请输入功能名称",
+                    maxlength: e + "功能名称不能超过100个字符"
+                },
+                funpath: {
+                    maxlength: e + "菜单路径不能超过100个字符"
+                }
+            },
+            submitHandler: function (form) {
+                //先上传文件
+                var value = $("#attachFile").val();
+                if ($.trim(value) != '') {
+                    var result = sendSingleFile("attachFile", {dataParams: {system: '1', type: '1'}});
+                    if (result.code != SUCCESS_CODE) {
+                        sweetAlert("上传文件错误", result.message, "error");
+                        return false;
+                    } else {
+                        $("#attachid").val(result.data);
+                    }
+                }
+                var data = serializeForm(form);
+                var powerPaths = [];
+                $(".addPath").each(function (i, obj) {
+                    powerPaths.push($(obj).val())
+                })
+                data.powerPaths = powerPaths.join(',');
+                var formData = JSON.stringify(data);
+                var req = {};
+                req['reqJSON'] = {
+                    type: 'post',
+                    url: SSO_URL + 'sy/sysfun/saveFun',
+                    data: formData
+                };
+                req['useToken'] = true;
+                req['successFn'] = function (respData) {
+                    layer.msg(respData.message, {icon: 6}, function () {
+                        if (respData.code == SUCCESS_CODE) {
+                            var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+                            parent.layer.close(index);
+                            parent.loadJqGrid();
+                        }
+                    });
+                };
+                ajaxRequest(req);
+            }
+        })
+    });
+
+    function setParentFun(funid, fundesc) {
+        $("#parentid").val(funid);
+        $("#parentName").val(fundesc);
+    }
+</script>
+</body>
+</html>
