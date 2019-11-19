@@ -111,21 +111,12 @@ public class SysFunServiceImpl extends BaseServiceImpl<SysFun, String> implement
         this.sysFunMapper.insertInto(into);
         if (StringUtil.isNotBlank(sysFunAddDTO.getPowerPaths())) {
             final String funid = fun.getFunid();
-            List<String> urls = new ArrayList<>();
             List<SyChanmgfunVistUrlmAddDTO> dtos =
-                    Arrays.asList(sysFunAddDTO.getPowerPaths().split(",")).parallelStream().map(value -> {
+                    Arrays.asList(sysFunAddDTO.getPowerPaths().split(",")).parallelStream().distinct().map(value -> {
                         SyChanmgfunVistUrlmAddDTO dto = new SyChanmgfunVistUrlmAddDTO();
                         dto.setFunid(funid);
                         dto.setUrl(value);
                         return dto;
-                    }).filter(value -> {
-                        if (StringUtil.isNotBlank(value.getUrl())
-                                && !urls.contains(value.getUrl())) {
-                            urls.add(value.getUrl());
-                            return true;
-                        } else {
-                            return false;
-                        }
                     }).collect(Collectors.toList());
             this.syChanmgfunVistUrlService.insertPowersUrl(dtos, userId, into.getReqNo());
         }
@@ -178,21 +169,12 @@ public class SysFunServiceImpl extends BaseServiceImpl<SysFun, String> implement
         this.syChanmgfunVistUrlService.deleteByAuth(fun.getFunid());
         if (StringUtil.isNotBlank(sysFunModDTO.getPowerPaths())) {
             final String funid = fun.getFunid();
-            List<String> urls = new ArrayList<>();
             List<SyChanmgfunVistUrlmAddDTO> dtos =
-                    Arrays.asList(sysFunModDTO.getPowerPaths().split(",")).parallelStream().map(value -> {
+                    Arrays.asList(sysFunModDTO.getPowerPaths().split(",")).parallelStream().distinct().map(value -> {
                         SyChanmgfunVistUrlmAddDTO dto = new SyChanmgfunVistUrlmAddDTO();
                         dto.setFunid(funid);
                         dto.setUrl(value);
                         return dto;
-                    }).filter(value -> {
-                        if (StringUtil.isNotBlank(value.getUrl())
-                                && !urls.contains(value.getUrl())) {
-                            urls.add(value.getUrl());
-                            return true;
-                        } else {
-                            return false;
-                        }
                     }).collect(Collectors.toList());
             this.syChanmgfunVistUrlService.insertPowersUrl(dtos, userId, into.getReqNo());
         }
