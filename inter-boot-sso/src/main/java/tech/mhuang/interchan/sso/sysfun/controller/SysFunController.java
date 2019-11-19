@@ -32,7 +32,6 @@ import tech.mhuang.interchan.sso.sysfun.service.ISysFunService;
 import java.util.List;
 
 /**
- *
  * 权限控制器
  *
  * @author zhangxh

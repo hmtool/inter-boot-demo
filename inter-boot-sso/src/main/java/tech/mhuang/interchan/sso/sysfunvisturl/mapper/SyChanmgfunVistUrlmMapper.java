@@ -2,7 +2,6 @@ package tech.mhuang.interchan.sso.sysfunvisturl.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.stereotype.Repository;
 import tech.mhuang.ext.interchan.core.mapper.BaseMapper;
 import tech.mhuang.ext.interchan.protocol.InsertInto;
 import tech.mhuang.interchan.sso.sysfunvisturl.entity.SyChanmgfunExcludeUrl;
@@ -12,7 +11,6 @@ import tech.mhuang.interchan.sso.sysuser.entity.SysUser;
 import java.util.List;
 
 @Mapper
-@Repository("syChanmgfunVistUrlmMapper")
 public interface SyChanmgfunVistUrlmMapper extends BaseMapper<SyChanmgfunVistUrlm, String> {
 
     /**

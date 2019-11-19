@@ -5,8 +5,6 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,9 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import tech.mhuang.ext.interchan.core.controller.BaseController;
-import tech.mhuang.ext.interchan.core.entity.RequestModel;
 import tech.mhuang.ext.interchan.core.local.GlobalHeaderThreadLocal;
-import tech.mhuang.ext.interchan.core.rest.SingleRestTemplate;
 import tech.mhuang.ext.interchan.protocol.GlobalHeader;
 import tech.mhuang.ext.interchan.protocol.Result;
 import tech.mhuang.ext.interchan.protocol.data.PageVO;
@@ -118,7 +114,7 @@ public class SysUserController extends BaseController {
             @ApiImplicitParam(name = "sysUserUpdateDTO", value = "修改的对象", required = true, paramType = "body", dataType = "SysUserUpdateDTO"),
     })
     public Result<?> updateUser(@RequestBody SysUserUpdateDTO sysUserUpdateDTO) {
-        if(true){
+        if (true) {
             throw new NullPointerException();
         }
         GlobalHeader globalHeader = GlobalHeaderThreadLocal.getOrException();
@@ -196,8 +192,8 @@ public class SysUserController extends BaseController {
         String token = jwtFramework.getProducer("zhangsan").create(claimMap);
         userVo.setToken(token);
         userVo.setAuthType("zhangsan");
-        Map<String,String> headerMap = new HashMap<>();
-        headerMap.put("Authorization","Bearer "+token);
+        Map<String, String> headerMap = new HashMap<>();
+        headerMap.put("Authorization", "Bearer " + token);
         headerMap.put("authType", "zhangsan");
         return Result.ok(userVo);
     }

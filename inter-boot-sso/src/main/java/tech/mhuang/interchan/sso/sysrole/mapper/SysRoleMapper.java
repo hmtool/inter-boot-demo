@@ -1,7 +1,6 @@
 package tech.mhuang.interchan.sso.sysrole.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
-import org.springframework.stereotype.Repository;
 import tech.mhuang.ext.interchan.core.mapper.BaseMapper;
 import tech.mhuang.ext.interchan.protocol.data.Page;
 import tech.mhuang.interchan.sso.sysrole.domain.SysRolePageQueryDO;
@@ -16,26 +15,7 @@ import java.util.List;
  * @date: 2017年7月19日 上午10:11:32
  */
 @Mapper
-@Repository
 public interface SysRoleMapper extends BaseMapper<SysRole, String> {
-
-    /**
-     * @param page
-     * @return List<SyChanmgrolem>
-     * @Title: page
-     * @Description: 分页查询角色信息
-     */
-    @Override
-    List<SysRole> page(Page<SysRole> page);
-
-    /**
-     * @param page
-     * @return int
-     * @Title: pageCount
-     * @Description:分页查询数量
-     */
-    @Override
-    int pageCount(Page<SysRole> page);
 
     /**
      * 分页查角色

@@ -1,7 +1,6 @@
 package tech.mhuang.interchan.sso.sysuser.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
-import org.springframework.stereotype.Repository;
 import tech.mhuang.ext.interchan.core.mapper.BaseMapper;
 import tech.mhuang.ext.interchan.protocol.data.Page;
 import tech.mhuang.interchan.sso.sysuser.domain.SysUserDO;
@@ -16,19 +15,7 @@ import java.util.List;
  * @date: 2017年7月13日 下午3:42:41
  */
 @Mapper
-@Repository("sysUserMapper")
 public interface SysUserMapper extends BaseMapper<SysUser, String> {
-
-    @Override
-    List<SysUser> page(Page<SysUser> page);
-
-    /**
-     * @param username
-     * @return SysUser
-     * @Title: getByUserName
-     * @Description: 根据用户名查询用户对象
-     */
-    SysUser getByUserName(String username);
 
     /**
      * @param mobilephone

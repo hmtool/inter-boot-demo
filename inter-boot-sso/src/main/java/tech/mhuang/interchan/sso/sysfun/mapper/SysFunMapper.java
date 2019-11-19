@@ -1,10 +1,8 @@
 package tech.mhuang.interchan.sso.sysfun.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
-import org.springframework.stereotype.Repository;
 import tech.mhuang.ext.interchan.core.mapper.BaseMapper;
 import tech.mhuang.ext.interchan.protocol.InsertInto;
-import tech.mhuang.ext.interchan.protocol.data.Page;
 import tech.mhuang.interchan.protocol.sso.sysfun.SysFunDTO;
 import tech.mhuang.interchan.sso.sysfun.entity.SysFun;
 
@@ -17,26 +15,7 @@ import java.util.List;
  * @date: 2017年7月19日 上午10:11:32
  */
 @Mapper
-@Repository
 public interface SysFunMapper extends BaseMapper<SysFun, String> {
-
-    /**
-     * @param page
-     * @return List<SyChanmgfunm>
-     * @Title: page
-     * @Description: 分页查询功能权限信息
-     */
-    @Override
-    List<SysFun> page(Page<SysFun> page);
-
-    /**
-     * @param page
-     * @return int
-     * @Title: pageCount
-     * @Description:分页查询数量
-     */
-    @Override
-    int pageCount(Page<SysFun> page);
 
     /**
      * @param funm

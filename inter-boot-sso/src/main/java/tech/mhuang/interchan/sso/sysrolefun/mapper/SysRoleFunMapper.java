@@ -1,7 +1,6 @@
 package tech.mhuang.interchan.sso.sysrolefun.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
-import org.springframework.stereotype.Repository;
 import tech.mhuang.ext.interchan.core.mapper.BaseMapper;
 import tech.mhuang.ext.interchan.protocol.InsertInto;
 import tech.mhuang.interchan.protocol.sso.sysfunrole.SysRoleFunBatchDTO;
@@ -18,7 +17,6 @@ import java.util.List;
  * @date: 2017年7月19日 上午10:11:32
  */
 @Mapper
-@Repository
 public interface SysRoleFunMapper extends BaseMapper<SysRoleFun, String> {
 
     /**
