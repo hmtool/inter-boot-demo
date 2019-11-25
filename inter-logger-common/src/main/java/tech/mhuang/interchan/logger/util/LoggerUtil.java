@@ -52,9 +52,12 @@ public class LoggerUtil {
         Object[] args = jPoint.getArgs();
         //组装传输对象数组
         if (args != null && args.length > 0) {
-            String data = JSON.toJSONString(args);
-            data = data.replaceAll("\\\\", "");
-            esLogger.setSendData(data);
+            try {
+                String data = JSON.toJSONString(args);
+                data = data.replaceAll("\\\\", "");
+                esLogger.setSendData(data);
+            } catch (Exception e) {
+            }
         }
         esLogger.setQueryData(request.getQueryString());
         packMethod(jPoint, esLogger);

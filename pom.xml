@@ -8,17 +8,17 @@
     <packaging>pom</packaging>
     <name>inter-boot-demo</name>
     <url>http://maven.apache.org</url>
-    <version>1.0.0</version>
+    <version>1.4.0</version>
     <properties>
         <java.version>1.8</java.version>
-        <interchan.version>1.3.0</interchan.version>
+        <interchan.version>1.4.0</interchan.version>
         <elasticsearch.version>1.3.0</elasticsearch.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <parent>
         <groupId>tech.mhuang</groupId>
         <artifactId>hmtool-ext-interchan</artifactId>
-        <version>1.3.0</version>
+        <version>1.4.0</version>
     </parent>
     <dependencyManagement>
         <dependencies>

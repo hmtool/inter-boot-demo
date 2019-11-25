@@ -5,7 +5,7 @@
     <parent>
         <artifactId>inter-boot-demo</artifactId>
         <groupId>tech.mhuang.interchan</groupId>
-        <version>1.0.0</version>
+        <version>1.4.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>inter-logger-common</artifactId>
@@ -30,6 +30,10 @@
         <dependency>
             <groupId>org.aspectj</groupId>
             <artifactId>aspectjweaver</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>tech.mhuang</groupId>
+            <artifactId>hmtool-core</artifactId>
         </dependency>
         <dependency>
             <groupId>tech.mhuang</groupId>
