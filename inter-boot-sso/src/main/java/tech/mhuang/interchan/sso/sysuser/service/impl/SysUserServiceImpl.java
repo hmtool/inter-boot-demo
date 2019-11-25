@@ -42,6 +42,7 @@ import java.util.List;
 @Service("sysUserService")
 public class SysUserServiceImpl extends BaseServiceImpl<SysUser, String> implements ISysUserService {
 
+    @Autowired
     private SysUserMapper sysUserMapper;
 
     @Autowired
@@ -64,12 +65,6 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser, String> impleme
 
     @Value("${sysuser_pwd_enc_key}")
     private String encryptKey;
-
-    @Autowired
-    public void setSysUserMapper(SysUserMapper sysUserMapper) {
-        this.sysUserMapper = sysUserMapper;
-        this.setBaseMapper(sysUserMapper);
-    }
 
     @Override
     public PageVO<SysUserVO> queryUserByPage(SysUserDTO sysUserDTO) {

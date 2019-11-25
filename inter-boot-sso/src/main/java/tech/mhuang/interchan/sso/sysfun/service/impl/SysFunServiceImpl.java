@@ -5,8 +5,8 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 import tech.mhuang.core.id.BaseIdeable;
+import tech.mhuang.core.util.CollectionUtil;
 import tech.mhuang.core.util.StringUtil;
 import tech.mhuang.ext.interchan.core.exception.BusinessException;
 import tech.mhuang.ext.interchan.core.service.impl.BaseServiceImpl;
@@ -59,10 +59,6 @@ public class SysFunServiceImpl extends BaseServiceImpl<SysFun, String> implement
 
     @Autowired
     private ISyChanmgfunVistUrlService syChanmgfunVistUrlService;
-
-    public void setMapper(SysFunMapper sysFunMapper) {
-        this.setBaseMapper(sysFunMapper);
-    }
 
     /**
      * <p>
@@ -256,7 +252,7 @@ public class SysFunServiceImpl extends BaseServiceImpl<SysFun, String> implement
         List<String> ids = new ArrayList<>();
         ids.add(funid);
         List<String> queryIds = new ArrayList<>();
-        while (!CollectionUtils.isEmpty(childFuns)) {
+        while (CollectionUtil.isNotEmpty(childFuns)) {
             childFuns.parallelStream().forEachOrdered((data) -> {
                 if (!ids.contains(data.getFunid())) {
                     ids.add(data.getFunid());
@@ -264,7 +260,7 @@ public class SysFunServiceImpl extends BaseServiceImpl<SysFun, String> implement
                 }
             });
             childFuns = null;
-            if (!CollectionUtils.isEmpty(queryIds)) {
+            if (CollectionUtil.isNotEmpty(queryIds)) {
                 childFuns = this.sysFunMapper.queryFunByParents(queryIds);
             }
             queryIds.clear();

@@ -54,10 +54,6 @@ public class SysRoleServiceImpl extends BaseServiceImpl<SysRole, String> impleme
     @Autowired
     private Environment environment;
 
-    public void setMapper(SysRoleMapper sysRoleMapper) {
-        this.setBaseMapper(sysRoleMapper);
-    }
-
     /**
      * <p>Title: saveRole</p>
      * <p>Description: </p>

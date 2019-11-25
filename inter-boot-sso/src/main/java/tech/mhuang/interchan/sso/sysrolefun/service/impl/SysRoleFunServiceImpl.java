@@ -37,11 +37,6 @@ public class SysRoleFunServiceImpl extends BaseServiceImpl<SysRoleFun, String> i
     @Autowired
     private BaseIdeable<String> baseIdeable;
 
-    @Autowired
-    public void setMapper(SysRoleFunMapper sysRoleFunMapper) {
-        this.setBaseMapper(sysRoleFunMapper);
-    }
-
     /**
      * <p>Title: saveRoleFun</p>
      * <p>Description: </p>

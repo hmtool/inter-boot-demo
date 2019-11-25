@@ -6,7 +6,6 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
+import tech.mhuang.core.util.CollectionUtil;
 import tech.mhuang.ext.interchan.core.constans.Global;
 import tech.mhuang.ext.interchan.core.controller.BaseController;
 import tech.mhuang.ext.interchan.core.local.GlobalHeaderThreadLocal;
@@ -77,20 +77,20 @@ public class SysRoleFunController extends BaseController {
      */
     private List<SysRoleFunTreeVO> structFunTree(List<SysRoleFunTreeDTO> roleFunVos) {
         List<SysRoleFunTreeVO> vos = new CopyOnWriteArrayList<>();
-        if (!CollectionUtils.isEmpty(roleFunVos)) {
+        if (CollectionUtil.isNotEmpty(roleFunVos)) {
             roleFunVos.parallelStream().forEach((data) -> {
                 if ("TOP".equals(data.getParentid())) {
                     SysRoleFunTreeVO vo = DataUtil.copyTo(data, SysRoleFunTreeVO.class);
                     vos.add(vo);
                     List<SysRoleFunTreeVO> children = this.getRoleFunChildren(data, roleFunVos);
-                    if (!CollectionUtils.isEmpty(children)) {
+                    if (CollectionUtil.isNotEmpty(children)) {
                         children.sort(Comparator.comparingInt(SysRoleFunTreeVO::getOrderval));
                     }
                     vo.setChildren(children);
                 }
             });
         }
-        if (!CollectionUtils.isEmpty(vos)) {
+        if (CollectionUtil.isNotEmpty(vos)) {
             vos.sort((data1, data2) -> {
                 try {
                     return Integer.compare(data1.getOrderval(), data2.getOrderval());

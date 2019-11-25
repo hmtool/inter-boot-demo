@@ -1,14 +1,13 @@
 package tech.mhuang.interchan.sso.sysfunvisturl.service.impl;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 import tech.mhuang.core.id.BaseIdeable;
+import tech.mhuang.core.util.CollectionUtil;
 import tech.mhuang.core.util.StringUtil;
 import tech.mhuang.ext.interchan.auth.constant.AuthConstant;
 import tech.mhuang.ext.interchan.core.rest.SingleRestTemplate;
@@ -45,19 +44,12 @@ public class SyChanmgfunVistUrlService
 
     @Autowired
     private BaseIdeable<String> snowflake;
+
     @Autowired
     private IRedisExtCommands redisExtCommands;
 
     @Autowired
     private SyChanmgfunVistUrlmMapper syChanmgfunVistUrlmMapper;
-
-    @Autowired
-    private SingleRestTemplate singleRestTemplate;
-
-    @Autowired
-    private void setMapper(SyChanmgfunVistUrlmMapper syChanmgfunVistUrlmMapper) {
-        super.setBaseMapper(syChanmgfunVistUrlmMapper);
-    }
 
     /**
      * @param funid
@@ -99,14 +91,13 @@ public class SyChanmgfunVistUrlService
     @Override
     public void insertPowersUrl(List<SyChanmgfunVistUrlmAddDTO> dtos, String userId, String seqno) {
         dtos.forEach((value) -> {
-            SyChanmgfunVistUrlm url = new SyChanmgfunVistUrlm();
-            BeanUtils.copyProperties(value, url);
+            SyChanmgfunVistUrlm url = DataUtil.copyTo(value,SyChanmgfunVistUrlm.class);
             url.setOperateTime(new Date());
             url.setOperateUser(userId);
             url.setId(snowflake.generateId());
             this.syChanmgfunVistUrlmMapper.save(url);
         });
-        if (!CollectionUtils.isEmpty(dtos)) {
+        if (CollectionUtil.isNotEmpty(dtos)) {
             InsertInto<String> into = new InsertInto<>();
             into.setReqNo(seqno);
             into.setId(dtos.get(0).getFunid());
@@ -140,7 +131,7 @@ public class SyChanmgfunVistUrlService
         List<SyChanmgfunExcludeUrlDTO> vos = null;
         //查询数据库，并放入缓存中
         List<SyChanmgfunExcludeUrl> urls = this.syChanmgfunVistUrlmMapper.getExcludeUrl();
-        if (!CollectionUtils.isEmpty(urls)) {
+        if (CollectionUtil.isNotEmpty(urls)) {
             Map datas =
                     urls.parallelStream().collect(Collectors.groupingBy(SyChanmgfunExcludeUrl::getType));
             this.redisExtCommands.hmset(AuthConstant.AUTH_DICT_KEY, datas);
@@ -171,7 +162,7 @@ public class SyChanmgfunVistUrlService
         //检查路径与权限问题
         String cacheKey = AuthConstant.USER_VIST_URL_CACHEKEY;
         List<SyChanmgfunVistUrlm> vistUrls = this.redisExtCommands.hgetList(cacheKey, userid, SyChanmgfunVistUrlm.class);
-        if (CollectionUtils.isEmpty(vistUrls)) {
+        if (CollectionUtil.isEmpty(vistUrls)) {
             //不存在的时候设置权限
             setVistUrlPowerNow(userid);
         }
@@ -216,7 +207,7 @@ public class SyChanmgfunVistUrlService
     @Async
     @Override
     public void setUserVistPowerByRolesAsync(List<SysRole> roles) {
-        if (!CollectionUtils.isEmpty(roles)) {
+        if (CollectionUtil.isNotEmpty(roles)) {
             //查询角色对应的用户信息
             List<String> roleIds =
                     roles.parallelStream().map(value -> value.getRoleid()).collect(Collectors.toList());
