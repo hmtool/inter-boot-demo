@@ -18,7 +18,7 @@ hmtool springboot版demo
     + jquery2+
 - 后台
     + springboot2.2.2+
-    + hmtool-ext-interchan 
+    + hmtool-ext-interchan 1.4.1
     + elasticsearch 7.5+
     + kafka 2.4+
     + jdk1.8+
