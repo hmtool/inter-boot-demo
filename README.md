@@ -17,12 +17,12 @@ hmtool springboot版demo
     + bootstrap3+
     + jquery2+
 - 后台
-    + springboot2.1.8+
+    + springboot2.2.2+
     + hmtool-ext-interchan 
-    + elasticsearch 6+
-    + kafka 2.11+
+    + elasticsearch 7.5+
+    + kafka 2.4+
     + jdk1.8+
-    + swagger2
+    + swagger2(knife4j2.0)
     
 ## 项目结构
 - inter-boot-demo(parent)
@@ -34,7 +34,7 @@ hmtool springboot版demo
 ## 案例运行步骤
 - 安装软件环境
 
-        elasticsearch6+，kibana6+（用于查看日志情况)，mysql5.7+(存储)，jdk1.8+,kafka2.1+(消息消费)
+        elasticsearch7.5+，kibana7.5+（用于查看日志情况)，mysql5.7+(存储)，jdk1.8+,kafka2.4+(消息消费)
 - 创建mysql数据库
         
         sql脚本存放在doc/数据库文件/inter-boot-demo.sql、先创建数据库、在选择数据库指定sql进行导入、若与demo不一致请自行配置相关ip、port、用户名、密码等
