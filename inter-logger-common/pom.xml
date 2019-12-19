@@ -5,7 +5,7 @@
     <parent>
         <artifactId>inter-boot-demo</artifactId>
         <groupId>tech.mhuang.interchan</groupId>
-        <version>1.4.0</version>
+        <version>1.4.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>inter-logger-common</artifactId>
