@@ -255,14 +255,14 @@
         if (power.botflag == '1'
             && checkAddMenu(power, powers)) {//是菜单并且有显示权限
             html += '<li>';
-            if(power.funpath){
-                html+='<a class="J_menuItem" href="'+power.funpath+'">'+power.fundesc+'</a>';
-            }else{
-                html+=' <a href="#"> ';
-                html+=' <span class="nav-label">'+power.fundesc+'</span> ';
-                html+=' <span class="fa arrow"></span> ';
-                html+=' </a> ';
-                html+=getMenuHtml(power,powers);
+            if (power.funpath) {
+                html += '<a class="J_menuItem" href="' + power.funpath + '">' + power.fundesc + '</a>';
+            } else {
+                html += ' <a href="#"> ';
+                html += ' <span class="nav-label">' + power.fundesc + '</span> ';
+                html += ' <span class="fa arrow"></span> ';
+                html += ' </a> ';
+                html += getMenuHtml(power, powers);
             }
             html += '</li>';
         }

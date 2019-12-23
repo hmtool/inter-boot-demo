@@ -7,8 +7,8 @@ import java.io.Serializable;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class SysUserFunVO  implements Serializable {
-	 /**
+public class SysUserFunVO implements Serializable {
+    /**
      * 功能代号
      */
     private String funid;
@@ -52,7 +52,7 @@ public class SysUserFunVO  implements Serializable {
      * 是否展示【0：否/1：是】
      */
     private String displayfun;
-    
+
 
     /**
      * 父功能代号

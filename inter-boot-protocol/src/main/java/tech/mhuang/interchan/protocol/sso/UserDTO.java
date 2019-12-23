@@ -6,7 +6,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 /**
- *
  * 用户
  *
  * @author mhuang
@@ -16,16 +15,16 @@ import lombok.Getter;
 @EqualsAndHashCode(callSuper = false)
 public class UserDTO {
 
-	/**
-	 * 用户id
-	 */
-	@Getter(onMethod_={@ApiModelProperty(value = "用户id", required = true)})
-	private String userid;
-	
-	/**
-	 * 操作的用户id
-	 */
-	@Getter(onMethod_={@ApiModelProperty(value = "操作用户id", hidden = true)})
-	private String operateUser;
-	
+    /**
+     * 用户id
+     */
+    @Getter(onMethod_ = {@ApiModelProperty(value = "用户id", required = true)})
+    private String userid;
+
+    /**
+     * 操作的用户id
+     */
+    @Getter(onMethod_ = {@ApiModelProperty(value = "操作用户id", hidden = true)})
+    private String operateUser;
+
 }

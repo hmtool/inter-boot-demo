@@ -1,19 +1,19 @@
 package tech.mhuang.interchan.protocol.sso.sysfun;
 
-import tech.mhuang.ext.interchan.protocol.data.PageDTO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import tech.mhuang.ext.interchan.protocol.data.PageDTO;
 
 import java.io.Serializable;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class SysFunPageQueryDTO extends PageDTO  implements Serializable {
+public class SysFunPageQueryDTO extends PageDTO implements Serializable {
     /**
      * 功能代号
      */
     private String funid;
-   
+
 
     /**
      * 功能名称
@@ -43,7 +43,7 @@ public class SysFunPageQueryDTO extends PageDTO  implements Serializable {
      * 是否是管理员 0 是 1不是
      */
     private String manager;
-    
+
     /**
      * sy_chanmgfunm
      */

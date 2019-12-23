@@ -7,12 +7,12 @@ import java.io.Serializable;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class SysFunTreeQueryDTO  implements Serializable {
+public class SysFunTreeQueryDTO implements Serializable {
     /**
      * 功能代号
      */
     private String funid;
-    
+
     private String nodeid;
 
     /**
@@ -49,7 +49,7 @@ public class SysFunTreeQueryDTO  implements Serializable {
      * 是否是管理员 0 是 1不是
      */
     private String manager;
-    
+
 
     /**
      * sy_chanmgfunm

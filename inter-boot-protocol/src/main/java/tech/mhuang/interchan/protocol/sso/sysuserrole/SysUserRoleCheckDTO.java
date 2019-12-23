@@ -7,7 +7,7 @@ import java.io.Serializable;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class SysUserRoleCheckDTO  implements Serializable {
+public class SysUserRoleCheckDTO implements Serializable {
     /**
      * 角色代号
      */
@@ -21,7 +21,7 @@ public class SysUserRoleCheckDTO  implements Serializable {
      * 审核标示
      */
     private String markflag;
-    
+
     private boolean checked;
 
     /**

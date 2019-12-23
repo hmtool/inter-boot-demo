@@ -8,7 +8,6 @@ import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- *
  * 注解记录日志
  *
  * @author mhuang
@@ -21,6 +20,7 @@ public @interface ESLogger {
 
     /**
      * 备注
+     *
      * @return 默认空
      */
     String remark() default "";

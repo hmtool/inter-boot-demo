@@ -9,21 +9,21 @@ import lombok.Getter;
 @EqualsAndHashCode(callSuper = false)
 public class ResetPwdDTO {
 
-	/**
-	 * 密码
-	 */
-	@Getter(onMethod_={@ApiModelProperty(value = "密码", required = true)})
-	private String password;
-	
-	/**
-	 * 用户id
-	 */
-	@Getter(onMethod_={@ApiModelProperty(value = "用户id", required = true)})
-	private String userid;
-	
-	/**
-	 * 操作的用户id
-	 */
-	@Getter(onMethod_={@ApiModelProperty(value = "操作用户id", hidden = true)})
-	private String operateUser;
+    /**
+     * 密码
+     */
+    @Getter(onMethod_ = {@ApiModelProperty(value = "密码", required = true)})
+    private String password;
+
+    /**
+     * 用户id
+     */
+    @Getter(onMethod_ = {@ApiModelProperty(value = "用户id", required = true)})
+    private String userid;
+
+    /**
+     * 操作的用户id
+     */
+    @Getter(onMethod_ = {@ApiModelProperty(value = "操作用户id", hidden = true)})
+    private String operateUser;
 }

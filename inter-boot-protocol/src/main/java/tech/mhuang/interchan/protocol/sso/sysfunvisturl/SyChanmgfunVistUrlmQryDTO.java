@@ -6,7 +6,7 @@ import lombok.EqualsAndHashCode;
 import java.io.Serializable;
 
 /**
- * @author 
+ * @author
  */
 @Data
 @EqualsAndHashCode(callSuper = false)

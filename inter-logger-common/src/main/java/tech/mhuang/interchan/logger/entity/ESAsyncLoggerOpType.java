@@ -1,7 +1,6 @@
 package tech.mhuang.interchan.logger.entity;
 
 /**
- *
  * es异步操作类型
  *
  * @author mhuang

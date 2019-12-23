@@ -802,7 +802,7 @@
             if (text.match(/^\\[\\`\*_{}\[\]()#\+.!\-]/))
                 return [2, text[1]];
             else
-            // Not an esacpe
+                // Not an esacpe
                 return [1, "\\"];
         },
 

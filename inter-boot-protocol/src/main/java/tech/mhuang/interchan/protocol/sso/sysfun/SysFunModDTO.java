@@ -7,7 +7,7 @@ import java.io.Serializable;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class SysFunModDTO  implements Serializable {
+public class SysFunModDTO implements Serializable {
     /**
      * 功能代号
      */
@@ -47,10 +47,10 @@ public class SysFunModDTO  implements Serializable {
      * 是否展示【0：否/1：是】
      */
     private String displayfun = "0";
-    
-    /**   
+
+    /**
      * 可访问权限路径
-     */   
+     */
     private String powerPaths;
     /**
      * sy_chanmgfunm

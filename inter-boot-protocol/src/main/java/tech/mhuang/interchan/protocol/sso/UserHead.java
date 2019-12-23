@@ -6,7 +6,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 /**
- *
  * 用户头像
  *
  * @author mhuang
@@ -16,9 +15,9 @@ import lombok.Getter;
 @EqualsAndHashCode(callSuper = false)
 public class UserHead {
 
-	@Getter(onMethod_={@ApiModelProperty(hidden = true)})
-	private String userId;
-	
-	@Getter(onMethod_={@ApiModelProperty(value = "用户头像Id",required = true)})
-	private String attachId;
+    @Getter(onMethod_ = {@ApiModelProperty(hidden = true)})
+    private String userId;
+
+    @Getter(onMethod_ = {@ApiModelProperty(value = "用户头像Id", required = true)})
+    private String attachId;
 }

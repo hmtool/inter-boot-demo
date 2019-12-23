@@ -1,8 +1,8 @@
 package tech.mhuang.interchan.protocol.sso.sysrole;
 
-import tech.mhuang.ext.interchan.protocol.data.PageDTO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import tech.mhuang.ext.interchan.protocol.data.PageDTO;
 
 import java.io.Serializable;
 
@@ -23,7 +23,7 @@ public class SysRolePageQueryDTO extends PageDTO implements Serializable {
      * 审核标示
      */
     private String markflag;
-    
+
     /**
      * sy_chanmgrolem
      */
