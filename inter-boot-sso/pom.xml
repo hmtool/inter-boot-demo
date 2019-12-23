@@ -57,11 +57,11 @@
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-to-slf4j</artifactId>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>tech.mhuang.interchan</groupId>-->
-<!--            <artifactId>inter-logger-common</artifactId>-->
-<!--            <version>${project.version}</version>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>tech.mhuang.interchan</groupId>
+            <artifactId>inter-logger-common</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <dependency>
             <groupId>com.github.xiaoymin</groupId>
             <artifactId>knife4j-spring-boot-starter</artifactId>
