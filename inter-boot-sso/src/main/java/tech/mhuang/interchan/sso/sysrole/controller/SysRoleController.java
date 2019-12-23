@@ -5,18 +5,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import springfox.documentation.annotations.ApiIgnore;
-import tech.mhuang.ext.interchan.core.constans.Global;
+import org.springframework.web.bind.annotation.*;
 import tech.mhuang.ext.interchan.core.controller.BaseController;
 import tech.mhuang.ext.interchan.core.local.GlobalHeaderThreadLocal;
 import tech.mhuang.ext.interchan.protocol.GlobalHeader;
@@ -24,11 +13,7 @@ import tech.mhuang.ext.interchan.protocol.Result;
 import tech.mhuang.ext.interchan.protocol.data.Page;
 import tech.mhuang.ext.interchan.protocol.data.PageVO;
 import tech.mhuang.ext.spring.util.DataUtil;
-import tech.mhuang.interchan.protocol.sso.sysrole.SysRoleAddDTO;
-import tech.mhuang.interchan.protocol.sso.sysrole.SysRoleModDTO;
-import tech.mhuang.interchan.protocol.sso.sysrole.SysRolePageQueryDTO;
-import tech.mhuang.interchan.protocol.sso.sysrole.SysRoleQueryDTO;
-import tech.mhuang.interchan.protocol.sso.sysrole.SysRoleVO;
+import tech.mhuang.interchan.protocol.sso.sysrole.*;
 import tech.mhuang.interchan.protocol.sso.sysrole.request.SysRolePageQueryQVO;
 import tech.mhuang.interchan.protocol.sso.sysrole.response.SysRoleRVO;
 import tech.mhuang.interchan.sso.sysrole.entity.SysRole;
@@ -56,8 +41,7 @@ public class SysRoleController extends BaseController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "sysRoleAddDTO", value = "角色对象", required = true, paramType = "body", dataType = "SysRoleAddDTO"),
     })
-    public Result<?> saveRole(@RequestBody SysRoleAddDTO sysRoleAddDTO,
-                              @ApiIgnore @RequestHeader(name = Global.GLOBAL_HEADER, required = false) String header) {
+    public Result<?> saveRole(@RequestBody SysRoleAddDTO sysRoleAddDTO) {
         GlobalHeader globalHeader = GlobalHeaderThreadLocal.getOrException();
         sysRoleService.saveRole(sysRoleAddDTO, globalHeader.getUserId());
         return Result.ok();

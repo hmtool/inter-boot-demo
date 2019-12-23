@@ -9,12 +9,11 @@ import java.util.List;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class SysUserRoleBatchDTO  implements Serializable {
+public class SysUserRoleBatchDTO implements Serializable {
     /**
      * 用户代码
      */
     private String userid;
-
 
 
     /**
@@ -26,10 +25,9 @@ public class SysUserRoleBatchDTO  implements Serializable {
      * 操作者
      */
     private String operateUser;
-    
+
     private List<String> roleids;
-    
-    
-    
+
+
     private static final long serialVersionUID = 1L;
 }

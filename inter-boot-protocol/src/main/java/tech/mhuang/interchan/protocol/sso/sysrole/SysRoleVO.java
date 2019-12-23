@@ -7,7 +7,7 @@ import java.io.Serializable;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class SysRoleVO  implements Serializable {
+public class SysRoleVO implements Serializable {
     /**
      * 角色代号
      */

@@ -2,11 +2,7 @@ package tech.mhuang.interchan.sso.sysrole.service;
 
 import tech.mhuang.ext.interchan.core.service.BaseService;
 import tech.mhuang.ext.interchan.protocol.data.PageVO;
-import tech.mhuang.interchan.protocol.sso.sysrole.SysRoleAddDTO;
-import tech.mhuang.interchan.protocol.sso.sysrole.SysRoleModDTO;
-import tech.mhuang.interchan.protocol.sso.sysrole.SysRolePageQueryDTO;
-import tech.mhuang.interchan.protocol.sso.sysrole.SysRoleQueryDTO;
-import tech.mhuang.interchan.protocol.sso.sysrole.SysRoleVO;
+import tech.mhuang.interchan.protocol.sso.sysrole.*;
 import tech.mhuang.interchan.protocol.sso.sysrole.request.SysRolePageQueryQVO;
 import tech.mhuang.interchan.sso.sysrole.entity.SysRole;
 

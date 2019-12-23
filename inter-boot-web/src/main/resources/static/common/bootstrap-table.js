@@ -43,7 +43,7 @@ function initTable(table) {
     if ((typeof table.useToken) == "undefined" || table.useToken) {
         bootstrapTableConfig['ajaxOptions'] = {};
         bootstrapTableConfig['ajaxOptions']['headers'] = {
-            'authType':getSessionData('authType'),
+            'authType': getSessionData('authType'),
             'Authorization': 'Bearer ' + getSessionData('userToken')
         }
     }
@@ -81,7 +81,7 @@ function initTableTree(table) {
     if ((typeof table.useToken) == "undefined" || table.useToken) {
         ext.ajaxOptions = {};
         ext.ajaxOptions.headers = {
-            'authType':getSessionData('authType'),
+            'authType': getSessionData('authType'),
             'Authorization': 'Bearer ' + getSessionData('userToken')
 //			 'Action':'getToken'
         }
@@ -204,7 +204,7 @@ function initJQTreeTable(config) {
     };
     if ((typeof config.useToken) == "undefined" || config.useToken) {
         defaults.headers = {
-            'authType':getSessionData('authType'),
+            'authType': getSessionData('authType'),
             'Authorization': 'Bearer ' + getSessionData('userToken')
 //				 'Action':'getToken'
         }

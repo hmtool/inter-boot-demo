@@ -1687,8 +1687,8 @@
                 });
             }
 
-            // An array of source objects
-            // Check if a source exists, use that or set the 'src' attribute?
+                // An array of source objects
+                // Check if a source exists, use that or set the 'src' attribute?
             // .source([{ src: 'path/to/video.mp4', type: 'video/mp4' },{ src: 'path/to/video.webm', type: 'video/webm' }])
             else if (sources.constructor === Array) {
                 for (var index in sources) {

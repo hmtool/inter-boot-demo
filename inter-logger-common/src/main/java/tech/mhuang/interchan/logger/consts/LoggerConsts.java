@@ -1,9 +1,6 @@
 package tech.mhuang.interchan.logger.consts;
 
-import lombok.Data;
-
 /**
- *
  * 日志常量
  *
  * @author mhuang

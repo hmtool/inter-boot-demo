@@ -6,16 +6,12 @@
     <parent>
         <groupId>tech.mhuang.interchan</groupId>
         <artifactId>inter-boot-demo</artifactId>
-        <version>1.4.1</version>
+       <version>1.4.2</version>
     </parent>
     <artifactId>inter-boot-sso</artifactId>
     <name>inter-boot-sso</name>
     <url>http://maven.apache.org</url>
     <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-redis</artifactId>
-        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -27,6 +23,10 @@
         <dependency>
             <groupId>tech.mhuang</groupId>
             <artifactId>interchan-auth-common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>tech.mhuang</groupId>
+            <artifactId>interchan-redis-common</artifactId>
         </dependency>
         <dependency>
             <groupId>tech.mhuang.interchan</groupId>
@@ -57,14 +57,18 @@
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-to-slf4j</artifactId>
         </dependency>
+<!--        <dependency>-->
+<!--            <groupId>tech.mhuang.interchan</groupId>-->
+<!--            <artifactId>inter-logger-common</artifactId>-->
+<!--            <version>${project.version}</version>-->
+<!--        </dependency>-->
         <dependency>
-            <groupId>commons-codec</groupId>
-            <artifactId>commons-codec</artifactId>
+            <groupId>com.github.xiaoymin</groupId>
+            <artifactId>knife4j-spring-boot-starter</artifactId>
         </dependency>
         <dependency>
-            <groupId>tech.mhuang.interchan</groupId>
-            <artifactId>inter-logger-common</artifactId>
-            <version>${project.version}</version>
+            <groupId>io.lettuce</groupId>
+            <artifactId>lettuce-core</artifactId>
         </dependency>
     </dependencies>
     <build>

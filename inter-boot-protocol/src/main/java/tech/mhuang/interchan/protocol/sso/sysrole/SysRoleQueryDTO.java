@@ -7,7 +7,7 @@ import java.io.Serializable;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class SysRoleQueryDTO  implements Serializable {
+public class SysRoleQueryDTO implements Serializable {
     /**
      * 角色代号
      */
@@ -22,7 +22,7 @@ public class SysRoleQueryDTO  implements Serializable {
      * 审核标示
      */
     private String markflag;
-    
+
     /**
      * sy_chanmgrolem
      */

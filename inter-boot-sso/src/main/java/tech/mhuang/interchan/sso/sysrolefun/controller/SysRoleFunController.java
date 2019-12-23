@@ -6,26 +6,14 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import springfox.documentation.annotations.ApiIgnore;
+import org.springframework.web.bind.annotation.*;
 import tech.mhuang.core.util.CollectionUtil;
-import tech.mhuang.ext.interchan.core.constans.Global;
 import tech.mhuang.ext.interchan.core.controller.BaseController;
 import tech.mhuang.ext.interchan.core.local.GlobalHeaderThreadLocal;
 import tech.mhuang.ext.interchan.protocol.GlobalHeader;
 import tech.mhuang.ext.interchan.protocol.Result;
 import tech.mhuang.ext.spring.util.DataUtil;
-import tech.mhuang.interchan.protocol.sso.sysfunrole.SysRoleFunAddDTO;
-import tech.mhuang.interchan.protocol.sso.sysfunrole.SysRoleFunDTO;
-import tech.mhuang.interchan.protocol.sso.sysfunrole.SysRoleFunTreeDTO;
-import tech.mhuang.interchan.protocol.sso.sysfunrole.SysRoleFunTreeVO;
-import tech.mhuang.interchan.protocol.sso.sysfunrole.SysRoleFunVO;
+import tech.mhuang.interchan.protocol.sso.sysfunrole.*;
 import tech.mhuang.interchan.sso.sysrolefun.service.ISysRoleFunService;
 
 import java.util.Comparator;
@@ -51,8 +39,7 @@ public class SysRoleFunController extends BaseController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "sysRoleFunAddDTO", value = "角色功能对象,多个funid用逗号隔开", required = true, paramType = "body", dataType = "SysRoleFunAddDTO"),
     })
-    public Result<?> setRoleFun(@RequestBody SysRoleFunAddDTO sysRoleFunAddDTO,
-                                @ApiIgnore @RequestHeader(name = Global.GLOBAL_HEADER, required = false) String header) {
+    public Result<?> setRoleFun(@RequestBody SysRoleFunAddDTO sysRoleFunAddDTO) {
         GlobalHeader globalHeader = GlobalHeaderThreadLocal.getOrException();
         sysRoleFunService.saveRoleFun(sysRoleFunAddDTO, globalHeader.getUserId());
         return Result.ok();

@@ -7,8 +7,8 @@ import java.io.Serializable;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class SysFunQueryDTO  implements Serializable {
-	  /**
+public class SysFunQueryDTO implements Serializable {
+    /**
      * 功能代号
      */
     private String funid;
@@ -52,7 +52,7 @@ public class SysFunQueryDTO  implements Serializable {
      * 是否展示【0：否/1：是】
      */
     private String displayfun;
-    
+
 
     /**
      * 父功能代号
@@ -63,7 +63,7 @@ public class SysFunQueryDTO  implements Serializable {
      * 是否是管理员 0 是 1不是
      */
     private String manager;
-    
+
     /**
      * sy_chanmgfunm
      */

@@ -10,7 +10,6 @@ import tech.mhuang.core.id.BaseIdeable;
 import tech.mhuang.core.util.CollectionUtil;
 import tech.mhuang.core.util.StringUtil;
 import tech.mhuang.ext.interchan.auth.constant.AuthConstant;
-import tech.mhuang.ext.interchan.core.rest.SingleRestTemplate;
 import tech.mhuang.ext.interchan.core.service.impl.BaseServiceImpl;
 import tech.mhuang.ext.interchan.protocol.InsertInto;
 import tech.mhuang.ext.interchan.redis.commands.IRedisExtCommands;
@@ -91,7 +90,7 @@ public class SyChanmgfunVistUrlService
     @Override
     public void insertPowersUrl(List<SyChanmgfunVistUrlmAddDTO> dtos, String userId, String seqno) {
         dtos.forEach((value) -> {
-            SyChanmgfunVistUrlm url = DataUtil.copyTo(value,SyChanmgfunVistUrlm.class);
+            SyChanmgfunVistUrlm url = DataUtil.copyTo(value, SyChanmgfunVistUrlm.class);
             url.setOperateTime(new Date());
             url.setOperateUser(userId);
             url.setId(snowflake.generateId());

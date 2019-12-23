@@ -1,11 +1,11 @@
 package tech.mhuang.interchan.sso.util;
 
-import org.apache.commons.codec.binary.Base64;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
+import java.util.Base64;
 
 public class AES {
     // 加密算法
@@ -28,8 +28,7 @@ public class AES {
         aesCipher.init(Cipher.ENCRYPT_MODE, secKey, random);
         byte[] byteCipherText = aesCipher.doFinal(byteText);
 
-        Base64 base64 = new Base64();
-        return new String(base64.encode(byteCipherText), ENC);
+        return new String(Base64.getEncoder().encode(byteCipherText), ENC);
     }
 
     // 解密
@@ -41,8 +40,7 @@ public class AES {
         SecureRandom random = SecureRandom.getInstance("SHA1PRNG");
         random.setSeed(secret.getBytes());
         aesCipher.init(Cipher.DECRYPT_MODE, secKey, random);
-        Base64 base64 = new Base64();
-        byte[] cipherbytes = base64.decode(ciphertext.getBytes());
+        byte[] cipherbytes = Base64.getDecoder().decode(ciphertext.getBytes());
         byte[] bytePlainText = aesCipher.doFinal(cipherbytes);
         return new String(bytePlainText, ENC);
     }

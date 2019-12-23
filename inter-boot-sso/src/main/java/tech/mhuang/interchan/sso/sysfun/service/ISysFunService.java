@@ -2,12 +2,7 @@ package tech.mhuang.interchan.sso.sysfun.service;
 
 import tech.mhuang.ext.interchan.core.service.BaseService;
 import tech.mhuang.ext.interchan.protocol.data.PageVO;
-import tech.mhuang.interchan.protocol.sso.sysfun.SysFunAddDTO;
-import tech.mhuang.interchan.protocol.sso.sysfun.SysFunModDTO;
-import tech.mhuang.interchan.protocol.sso.sysfun.SysFunPageQueryDTO;
-import tech.mhuang.interchan.protocol.sso.sysfun.SysFunQueryDTO;
-import tech.mhuang.interchan.protocol.sso.sysfun.SysFunTreeQueryDTO;
-import tech.mhuang.interchan.protocol.sso.sysfun.SysFunVO;
+import tech.mhuang.interchan.protocol.sso.sysfun.*;
 import tech.mhuang.interchan.sso.sysfun.entity.SysFun;
 
 import java.util.List;

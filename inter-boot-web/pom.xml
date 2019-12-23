@@ -6,7 +6,7 @@
     <parent>
         <groupId>tech.mhuang.interchan</groupId>
         <artifactId>inter-boot-demo</artifactId>
-        <version>1.4.1</version>
+       <version>1.4.2</version>
     </parent>
     <artifactId>inter-boot-web</artifactId>
     <name>inter-boot-web</name>

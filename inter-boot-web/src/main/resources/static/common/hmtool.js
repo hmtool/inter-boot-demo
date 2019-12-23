@@ -1,5 +1,6 @@
 var SUCCESS_CODE = 200,
     SSO_URL = "@SSO_URL@";
+
 /**
  * 获取session用户
  * @returns object
@@ -132,7 +133,7 @@ function sendSingleFile(fileFiledId, options) {
     }
     if ((typeof options.useToken) == "undefined" || options.useToken) {
         options['headers'] = {
-            'authType':getSessionData('authType'),
+            'authType': getSessionData('authType'),
             'Authorization': 'Bearer ' + getSessionData('userToken')
 //			 'Action':'getToken'
         }
@@ -198,7 +199,7 @@ function ajaxRequest(req) {
     } else {
         ajaxConfig['beforeSend'] = function (xhr) {
             if ((typeof req.useToken) == "undefined" || req.useToken) {
-                xhr.setRequestHeader('authType',getSessionData('authType'));
+                xhr.setRequestHeader('authType', getSessionData('authType'));
                 xhr.setRequestHeader('Authorization', 'Bearer ' + getSessionData('userToken'));
                 //			xhr.setRequestHeader('Action','getToken');
             }
