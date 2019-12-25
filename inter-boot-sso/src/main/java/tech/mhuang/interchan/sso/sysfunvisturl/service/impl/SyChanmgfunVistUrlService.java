@@ -12,7 +12,6 @@ import tech.mhuang.core.util.StringUtil;
 import tech.mhuang.ext.interchan.auth.constant.AuthConstant;
 import tech.mhuang.ext.interchan.core.service.impl.BaseServiceImpl;
 import tech.mhuang.ext.interchan.protocol.InsertInto;
-import tech.mhuang.ext.interchan.redis.commands.IRedisExtCommands;
 import tech.mhuang.ext.spring.util.DataUtil;
 import tech.mhuang.interchan.protocol.sso.sysfunvisturl.SyChanmgfunExcludeUrlDTO;
 import tech.mhuang.interchan.protocol.sso.sysfunvisturl.SyChanmgfunVistUrlmAddDTO;
@@ -21,6 +20,7 @@ import tech.mhuang.interchan.sso.sysfunvisturl.entity.SyChanmgfunExcludeUrl;
 import tech.mhuang.interchan.sso.sysfunvisturl.entity.SyChanmgfunVistUrlm;
 import tech.mhuang.interchan.sso.sysfunvisturl.mapper.SyChanmgfunVistUrlmMapper;
 import tech.mhuang.interchan.sso.sysfunvisturl.service.ISyChanmgfunVistUrlService;
+import tech.mhuang.interchan.sso.sysfunvisturl.util.SysFunvisturlRedisOperator;
 import tech.mhuang.interchan.sso.sysrole.entity.SysRole;
 import tech.mhuang.interchan.sso.sysuser.entity.SysUser;
 
@@ -45,10 +45,10 @@ public class SyChanmgfunVistUrlService
     private BaseIdeable<String> snowflake;
 
     @Autowired
-    private IRedisExtCommands redisExtCommands;
+    private SyChanmgfunVistUrlmMapper syChanmgfunVistUrlmMapper;
 
     @Autowired
-    private SyChanmgfunVistUrlmMapper syChanmgfunVistUrlmMapper;
+    private SysFunvisturlRedisOperator syChanmgfunRedisOperator;
 
     /**
      * @param funid
@@ -133,7 +133,7 @@ public class SyChanmgfunVistUrlService
         if (CollectionUtil.isNotEmpty(urls)) {
             Map datas =
                     urls.parallelStream().collect(Collectors.groupingBy(SyChanmgfunExcludeUrl::getType));
-            this.redisExtCommands.hmset(AuthConstant.AUTH_DICT_KEY, datas);
+            syChanmgfunRedisOperator.cacheData(AuthConstant.AUTH_DICT_KEY, datas);
         }
         return vos;
     }
@@ -158,9 +158,7 @@ public class SyChanmgfunVistUrlService
      */
     @Override
     public void setVistUrlPower(String userid) {
-        //检查路径与权限问题
-        String cacheKey = AuthConstant.USER_VIST_URL_CACHEKEY;
-        List<SyChanmgfunVistUrlm> vistUrls = this.redisExtCommands.hgetList(cacheKey, userid, SyChanmgfunVistUrlm.class);
+        List<SyChanmgfunVistUrlm> vistUrls = syChanmgfunRedisOperator.getVistUrls(userid);
         if (CollectionUtil.isEmpty(vistUrls)) {
             //不存在的时候设置权限
             setVistUrlPowerNow(userid);
@@ -175,8 +173,7 @@ public class SyChanmgfunVistUrlService
         Map params = urlms.parallelStream().collect(Collectors.toMap((k) -> {
             return userId.concat("-").concat(k.getUrl());
         }, v -> v, (oldValue, newValue) -> oldValue));
-        this.redisExtCommands.hmset(cacheKey, params);
-
+        syChanmgfunRedisOperator.cacheData(cacheKey, params);
     }
 
     /**

@@ -15,7 +15,6 @@ import tech.mhuang.ext.interchan.protocol.InsertInto;
 import tech.mhuang.ext.interchan.protocol.Result;
 import tech.mhuang.ext.interchan.protocol.data.Page;
 import tech.mhuang.ext.interchan.protocol.data.PageVO;
-import tech.mhuang.ext.interchan.redis.commands.IRedisExtCommands;
 import tech.mhuang.ext.spring.util.DataUtil;
 import tech.mhuang.interchan.protocol.sso.UserDTO;
 import tech.mhuang.interchan.protocol.sso.sysuser.*;
@@ -29,6 +28,7 @@ import tech.mhuang.interchan.sso.sysuser.entity.SysUser;
 import tech.mhuang.interchan.sso.sysuser.mapper.SysUserMapper;
 import tech.mhuang.interchan.sso.sysuser.mapper.SysUserRecordMapper;
 import tech.mhuang.interchan.sso.sysuser.service.ISysUserService;
+import tech.mhuang.interchan.sso.sysuser.util.UserRedisOperator;
 import tech.mhuang.interchan.sso.util.AES;
 import tech.mhuang.interchan.sso.util.MD5;
 
@@ -48,11 +48,8 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser, String> impleme
     private BaseIdeable<String> snowflake;
 
     @Autowired
-    private IRedisExtCommands redisExtCommands;
+    UserRedisOperator userRedisOperator;
 
-    private final static String SYUSER_REDIS_MOBILE_TOUSERID_PREKEY = "syur_moblie_uid_";
-
-    private final static String SYUSER_REDIS_USERID_TO_USER_PREKEY = "syur_user_uid_";
 
     private final static Logger logger = LoggerFactory.getLogger(SysUserServiceImpl.class);
 
@@ -86,7 +83,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser, String> impleme
 
     @Override
     public void saveUser(SysUserAddDTO sysUserAddDTO) {
-        String userId = redisExtCommands.hget(SYUSER_REDIS_MOBILE_TOUSERID_PREKEY, sysUserAddDTO.getMobilephone());
+        String userId = userRedisOperator.getUserId(sysUserAddDTO.getMobilephone());
         if (StringUtil.isNotBlank(userId)) {
             throw new BusinessException(Result.SYS_RESULT_FAILD,
                     environment.getProperty("chan_mobile_repeat"));
@@ -424,7 +421,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser, String> impleme
         SysUser sysuser = null;
         try {
             //从缓存中加载用户信息
-            sysuser = redisExtCommands.hget(SYUSER_REDIS_USERID_TO_USER_PREKEY, userId, SysUser.class);
+            sysuser = userRedisOperator.getSysUserByUserId(userId);
         } catch (Exception e) {
             logger.error("使用userId从缓存中获取用户信息失败，userId为：{}", userId, e);
         }
@@ -439,7 +436,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser, String> impleme
      */
     private String getUserIdByMobileFromCache(String mobilephone) {
         try {
-            return redisExtCommands.hget(SYUSER_REDIS_MOBILE_TOUSERID_PREKEY, mobilephone);
+            return userRedisOperator.getUserId(mobilephone);
         } catch (Exception e) {
             logger.error("getUserIdByMobileFromCache 获取用户缓存信息失败,手机号为：{}", mobilephone, e);
         }
@@ -452,7 +449,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser, String> impleme
      * @return: String
      */
     public String getSyuserRedisMobileToUserIdKey(String mobilephone) {
-        return SYUSER_REDIS_MOBILE_TOUSERID_PREKEY + mobilephone;
+        return UserRedisOperator.SYUSER_REDIS_MOBILE_TOUSERID_PREKEY + mobilephone;
     }
 
     /**
@@ -461,7 +458,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser, String> impleme
      * @return: String
      */
     public String getSyuserRedisUserIdToUserKey(String userId) {
-        return SYUSER_REDIS_USERID_TO_USER_PREKEY + userId;
+        return UserRedisOperator.SYUSER_REDIS_USERID_TO_USER_PREKEY + userId;
     }
 
     /**
@@ -471,8 +468,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser, String> impleme
      */
     public boolean setSyuserRedisMobileToUser(String mobilephone, String userId) {
         try {
-            return redisExtCommands.hset(SYUSER_REDIS_MOBILE_TOUSERID_PREKEY,
-                    mobilephone, userId, Global.EXPIRE_THIRTY_DAYS);
+            return userRedisOperator.cacheUser(UserRedisOperator.SYUSER_REDIS_MOBILE_TOUSERID_PREKEY, mobilephone, userId, Global.EXPIRE_THIRTY_DAYS);
         } catch (Exception e) {
             logger.error("setSyuserRedisMobileToUser 设置缓存信息失败,手机号为：{}", mobilephone, e);
             return false;
@@ -487,8 +483,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser, String> impleme
      */
     public boolean setSyuserRedisUserIdToUser(String userId, SysUser user) {
         try {
-            return redisExtCommands.hset(SYUSER_REDIS_USERID_TO_USER_PREKEY,
-                    userId, user, Global.EXPIRE_THIRTY_DAYS);
+            return userRedisOperator.cacheUser(UserRedisOperator.SYUSER_REDIS_USERID_TO_USER_PREKEY, userId, user, Global.EXPIRE_THIRTY_DAYS);
         } catch (Exception e) {
             logger.error("setSyuserRedisUserIdToUser 设置缓存信息失败,用户ID为：{}", userId, e);
             return false;
@@ -497,7 +492,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser, String> impleme
 
     private SysUser getSyuserRedisUserId(String userId) {
         try {
-            return redisExtCommands.hget(SYUSER_REDIS_USERID_TO_USER_PREKEY, userId, SysUser.class);
+            return userRedisOperator.getSysUserByUserId(userId);
         } catch (Exception e) {
             logger.error("getSyuserRedisUserId 获取缓存失败,用户ID为：{}", userId, e);
             return null;

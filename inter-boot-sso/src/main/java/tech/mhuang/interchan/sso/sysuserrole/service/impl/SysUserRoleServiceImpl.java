@@ -8,12 +8,12 @@ import tech.mhuang.core.id.BaseIdeable;
 import tech.mhuang.core.util.StringUtil;
 import tech.mhuang.ext.interchan.core.service.impl.BaseServiceImpl;
 import tech.mhuang.ext.interchan.protocol.InsertInto;
-import tech.mhuang.ext.interchan.redis.commands.IRedisExtCommands;
 import tech.mhuang.ext.spring.util.DataUtil;
 import tech.mhuang.interchan.protocol.sso.sysuserrole.*;
 import tech.mhuang.interchan.sso.sysuserrole.entity.SysUserRole;
 import tech.mhuang.interchan.sso.sysuserrole.mapper.SysUserRoleMapper;
 import tech.mhuang.interchan.sso.sysuserrole.service.ISysUserRoleService;
+import tech.mhuang.interchan.sso.sysuserrole.util.SysUserRoleRedisOperator;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -36,10 +36,8 @@ public class SysUserRoleServiceImpl extends BaseServiceImpl<SysUserRole, String>
     private BaseIdeable<String> snowflake;
 
     @Autowired
-    private IRedisExtCommands redisExtCommands;
+    private SysUserRoleRedisOperator sysUserRoleRedisOperator;
 
-
-    public static final String SYSTEM_USER_ROLE_CACHE_KEY = "SYSTEM_USER_ROLE";
 
     @Autowired
     public void setMapper(SysUserRoleMapper sysUserRoleMapper) {
@@ -149,7 +147,7 @@ public class SysUserRoleServiceImpl extends BaseServiceImpl<SysUserRole, String>
     @Override
     public void setUserRoleToCache(String userId) {
         List<SysUserRoleDTO> userRoles = this.queryUserRole(userId);
-        redisExtCommands.hset(SYSTEM_USER_ROLE_CACHE_KEY, userId, userRoles);
+        sysUserRoleRedisOperator.cacheUserRole(userId, userRoles);
     }
 
 

@@ -26,11 +26,6 @@ public class ESAsyncLogger {
     private String index;
 
     /**
-     * es记录的索引类型
-     */
-    private String type;
-
-    /**
      * es记录的日志
      */
     private ESOperatorLogger esOperatorLogger;

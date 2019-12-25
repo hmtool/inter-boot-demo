@@ -133,7 +133,6 @@ public class WebLoggerAspect {
         esAsyncLogger.setEsOperatorLogger(esOperatorLogger);
         esAsyncLogger.setName(properties.getEsKey());
         esAsyncLogger.setIndex(application);
-        esAsyncLogger.setType(application);
         if (StringUtil.isEmpty(esOperatorLogger.getId())) {
             esAsyncLogger.setOpType(ESAsyncLoggerOpType.INSERT);
         } else {
